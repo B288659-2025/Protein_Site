@@ -1,0 +1,780 @@
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq1.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: cag31453.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: CAG31453.1     from: 1   to: 96
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq5.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: eoa95805.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: EOA95805.1     from: 1   to: 241
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq6.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: eob03155.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: EOB03155.1     from: 1   to: 115
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq25.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: kfm01312.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: KFM01312.1     from: 1   to: 356
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 139 of sequence
+End = position 142 of sequence
+
+Motif = AMIDATION
+
+LLSTAMGKKQSRTL
+     |  |
+   139  142
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq26.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: kfm04568.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: KFM04568.1     from: 1   to: 358
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq2.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_002194882.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_002194882.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq3.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_003207632.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_003207632.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq4.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_003641696.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_003641696.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq7.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_004942826.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_004942826.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq8.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_004942827.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_004942827.1     from: 1   to: 287
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq9.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005059732.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005059732.1     from: 1   to: 359
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq10.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005062292.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005062292.1     from: 1   to: 205
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq11.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005152833.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005152833.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq12.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005235928.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005235928.1     from: 1   to: 342
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq14.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005415892.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005415892.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq15.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005415893.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005415893.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq16.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005429668.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005429668.1     from: 1   to: 413
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq13.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005439522.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005439522.1     from: 1   to: 342
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq19.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005498695.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005498695.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq20.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005498696.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005498696.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq17.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005519827.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005519827.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq18.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_005521011.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_005521011.1     from: 1   to: 661
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 195 of sequence
+End = position 198 of sequence
+
+Motif = AMIDATION
+
+LNIINAGRKSFPSQ
+     |  |
+   195  198
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq21.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008503354.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008503354.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq22.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008503927.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008503927.1     from: 1   to: 358
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 139 of sequence
+End = position 142 of sequence
+
+Motif = AMIDATION
+
+LLSAAMGKKQSKTL
+     |  |
+   139  142
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq24.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008633009.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008633009.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq23.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008638823.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008638823.1     from: 1   to: 358
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 139 of sequence
+End = position 142 of sequence
+
+Motif = AMIDATION
+
+LLSAAEGKKQSRTL
+     |  |
+   139  142
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq27.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008929256.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008929256.1     from: 1   to: 355
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq29.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008934238.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008934238.1     from: 1   to: 299
+# HitCount: 0
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:09
+# Commandline: patmatmotifs
+#    -sequence seq30.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008935418.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008935418.1     from: 1   to: 211
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 3
+Start = position 88 of sequence
+End = position 90 of sequence
+
+Motif = RGD
+
+YYSPTRGDTTMIL
+     | |
+    88 90
+
+
+#---------------------------------------
+#---------------------------------------
+########################################
+# Program: patmatmotifs
+# Rundate: Sat  7 Mar 2026 22:39:08
+# Commandline: patmatmotifs
+#    -sequence seq28.fa
+#    -auto
+# Report_format: dbmotif
+# Report_file: xp_008947030.patmatmotifs
+########################################
+
+#=======================================
+#
+# Sequence: XP_008947030.1     from: 1   to: 130
+# HitCount: 1
+#
+# Full: No
+# Prune: Yes
+# Data_file: /usr/share/EMBOSS/data/PROSITE/prosite.lines
+#
+#=======================================
+
+Length = 4
+Start = position 119 of sequence
+End = position 122 of sequence
+
+Motif = AMIDATION
+
+PGLVAEGRKSFPSG
+     |  |
+   119  122
+
+
+#---------------------------------------
+#---------------------------------------

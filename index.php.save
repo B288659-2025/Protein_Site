@@ -1,0 +1,101 @@
+<?php
+
+session_start();
+
+echo "<h1 style='text-align:center;'>Protein Analysis Home Page</h1>";
+
+require_once 'menu.php';
+
+?>
+
+<h1>Select </h1>
+
+<!-- Example dataset -->
+
+<form id="example_form">
+
+<input type="hidden" name="id_analysis" value="1">
+
+<button type="submit">
+Use Example Dataset (Glucose-6-Phosphatase Aves)
+</button>
+
+</form>
+
+<br><hr><br>
+
+<!-- Custom dataset -->
+
+<form id="analysis_form">
+
+Protein family:<br>
+<input type="text" name="protein" required><br><br>
+
+Taxonomic group:<br>
+<input type="text" name="taxon" required><br><br>
+
+Maximum sequences:<br>
+<input type="number" name="seq_max" value="30"><br><br>
+
+<button type="submit">Run Analysis</button>
+
+</form>
+
+<br><hr><br>
+
+<div id="results"></div>
+
+
+<script>
+
+/* Example dataset AJAX */
+
+document.getElementById("example_form").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+
+    fetch("seq.php",{
+        method:"POST",
+        body:formData
+    })
+    .then(response => response.text())
+    .then(data => {
+
+       window.location = "seq.php";
+
+    });
+
+});
+
+
+/* Custom analysis AJAX */
+
+document.getElementById("analysis_form").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    document.getElementById("results").innerHTML =
+    "Running analysis...<br>Retrieving sequences...";
+
+    fetch("seq.php",{
+        method:"POST",
+        body:formData
+    })
+    .then(response => response.text())
+    .then(data => {
+
+        window.location = "seq.php"
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
