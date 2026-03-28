@@ -14,15 +14,18 @@ if(isset($_POST['id_analysis']))
 }
 
 
-$stmt = $pdo->query("
+$id_user = $_SESSION["id_user"];
+
+$stmt = $pdo->prepare("
 select id_analysis, protein, taxon, seq_max
 from analyses
-where protein != 'glucose-6-phosphatase'
+where id_user = ?
+and protein != 'glucose-6-phosphatase'
 order by id_analysis desc
 ");
 
+$stmt->execute([$id_user]);
 $analyses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-echo "<h1 style='text-align:center;'>Previous Searches</h1>";
 require_once 'menu.php';
 
 

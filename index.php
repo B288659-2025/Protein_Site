@@ -2,14 +2,14 @@
 
 session_start();
 
-echo "<h1 style='text-align:center;margin-top:30px;'>Protein Analysis Home Page</h1>";
 require_once 'menu.php';
 ?>
 
-<div style='background:white;padding:30px;border-radius:10px;max-width:600px;margin:40px auto;box-shadow:0 5px 15px rgba(0,0,0,0.1);'>
+<!-- <div style='background:white;padding:30px;border-radius:10px;max-width:600px;margin:40px auto;box-shadow:0 5px 15px rgba(0,0,0,0.1);'> -->
+<div style='background:white;padding:30px;border-radius:10px;max-width:600px;max-height:550px;margin:40px auto;box-shadow:0 5px 15px rgba(0,0,0,0.1);font-size:18px;'>
 <h3>Select a Database :)</h3>
 
-<!-- Example dataset -->
+<!-- Use Example Dataset -->
 
 <form id="example_form" method = "POST" action = "seq.php">
 
@@ -23,7 +23,7 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
 
 <div style='height:40px'></div>
 
-<!-- Custom dataset -->
+<!-- Run Custom Search -->
 
 <form id="analysis_form" method = "POST" action = "seq.php">
 
@@ -35,6 +35,27 @@ Taxonomic group:<br>
 
 Maximum sequences:<br>
 <input type="number" name="seq_max" value="30"><br><br>
+
+<h4>Quality filters (optional)</h4>
+
+<label>
+<input type="checkbox" name="exclude_partial">
+Exclude partial sequences
+</label>
+<br>
+
+<label>
+<input type="checkbox" name="manual_curated">
+Manual curated only
+</label>
+<br>
+
+<label>
+<input type="checkbox" name="exclude_fragments">
+Exclude fragments
+</label>
+
+<br><br>
 
 <button type="submit">Run Analysis</button>
 

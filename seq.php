@@ -45,8 +45,12 @@ if(isset($_POST['protein']) && isset($_POST['taxon']))
     $protein = $_POST['protein'];
     $taxon   = $_POST['taxon'];
     $maxseq  = $_POST['seq_max'] ?? 30;
-    $stmt = $pdo->prepare("select id_analysis from analyses where protein = ? and taxon = ? and seq_max = ? limit 1");
-    $stmt->execute([$protein,$taxon, $maxseq]);
+    $id_user = $_SESSION['id_user'];
+    $exclude_partial = isset($_POST['exclude_partial']) ? 1 : 0;
+    $manual_only     = isset($_POST['manual_only']) ? 1: 0;
+    $exclude_frag    = isset($_POST['exclude_frag']) ? 1 : 0;
+    $stmt = $pdo->prepare("select id_analysis from analyses where protein = ? and taxon = ? and seq_max = ? and id_user = ? and exclude_partial = ? and manual_only = ? and exclude_frag = ? limit 1");
+    $stmt->execute([$protein,$taxon, $maxseq, $id_user, $exclude_partial, $manual_only, $exclude_frag]);
     $existing_id = $stmt->fetchColumn();
     if($existing_id)
     {
@@ -54,7 +58,7 @@ if(isset($_POST['protein']) && isset($_POST['taxon']))
       header("Location: seq.php");
       exit;
     }
-    $sequences = get_sequences_ncbi($protein,$taxon,$maxseq);
+    $sequences = get_sequences_ncbi($protein,$taxon,$maxseq,$id_user, $exclude_partial, $manual_only, $exclude_frag);
 
     $alignment = run_alignment($sequences);
 
@@ -68,16 +72,20 @@ if(isset($_POST['protein']) && isset($_POST['taxon']))
         $maxseq,
         $sequences,
         $alignment,
-        $motifs
-    );
+        $motifs,
+        $exclude_partial,
+        $manual_only,
+        $exclude_frag
+);
     $_SESSION['id_analysis'] = $id_analysis;
 }
 
-echo "<h1 style='text-align:center;'>Protein Sequences</h1>";
+//echo "<h1 style='text-align:center;'>Protein Sequences</h1>";
 
-require_once 'menu.php';
+require_once "menu.php";
 
 echo "<div class='container'>";
+
 
 $id = $_SESSION['id_analysis'] ?? null;
 
@@ -98,9 +106,24 @@ WHERE id_analysis = ?
 $stmt->execute([$id]);
 
 $sequences = $stmt->fetchColumn();
-echo "<pre>";
-echo $sequences;
-echo "</pre>";
+echo "<div class='fasta-container'>";
+
+$sequences = explode(">", $sequences);
+
+foreach ($sequences as $seq) {
+    if (trim($seq) == "") continue;
+
+    $lines = explode("\n", trim($seq));
+    $header = array_shift($lines);
+    $sequence = implode("", $lines);
+
+    echo "<div class='sequence-card'>";
+    echo "<div class='sequence-header'>".$header."</div>";
+    echo "<div class='sequence-body'>".$sequence."</div>";
+    echo "</div>";
+}
+
 echo "</div>";
+
 
 ?>

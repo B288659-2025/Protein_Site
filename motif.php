@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-echo "<h1 style='text-align:center;'>Motifs</h1>";
 
 require_once 'menu.php';
 require_once 'db.php';

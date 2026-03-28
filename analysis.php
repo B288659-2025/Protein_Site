@@ -5,7 +5,6 @@ session_start();
 require_once 'db.php';
 require_once 'analysis_functions.php';
 
-echo "<h1 style='text-align:center;'>Additional Analysis</h1>";
 require_once 'menu.php';
 
 echo "<div class = 'container'>";

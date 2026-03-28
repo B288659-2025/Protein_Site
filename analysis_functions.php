@@ -1,8 +1,23 @@
 <?php
 
-function get_sequences_ncbi($protein, $taxon, $maxseq)
+function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual_only,$exclude_frag)
 {
-    $term = urlencode($protein . " AND " . $taxon);
+
+    $query = $protein . " AND (" . $taxon . ")";
+
+    if ($exclude_partial) {
+       $query .= " NOT partial";
+    }
+
+    if ($exclude_frag) {
+       $query .= " NOT fragment";
+    }
+
+    if ($manual_only) {
+       $query .= " AND reviewed[filter]";
+    }
+
+    $term = urlencode($query);
 
     // Step 1: search for IDs
     $search_url =
@@ -170,48 +185,87 @@ function get_statistics($sequences)
     </div>
 ";
 }
-function save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $alignment, $motifs)
+function save_analysis(
+    $pdo,
+    $protein,
+    $taxon,
+    $maxseq,
+    $sequences,
+    $alignment,
+    $motifs,
+    $exclude_partial,
+    $manual_only,
+    $exclude_frag
+)
 {
+    // Get logged in user
+    $id_user = $_SESSION["id_user"];
+
+
     $stmt = $pdo->prepare("
-        INSERT INTO analyses (name, protein, taxon, seq_max)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO analyses
+        (
+            name,
+            protein,
+            taxon,
+            seq_max,
+            id_user,
+            exclude_partial,
+            manual_only,
+            exclude_frag
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
         "User Dataset",
         $protein,
         $taxon,
-        $maxseq
+        $maxseq,
+        $id_user,
+        $exclude_partial,
+        $manual_only,
+        $exclude_frag
     ]);
 
     $id_analysis = $pdo->lastInsertId();
 
 
     $stmt = $pdo->prepare("
-        INSERT INTO sequences (id_analysis, fasta_data)
+        INSERT INTO sequences
+        (id_analysis, fasta_data)
         VALUES (?, ?)
     ");
 
-    $stmt->execute([$id_analysis, $sequences]);
+    $stmt->execute([
+        $id_analysis,
+        $sequences
+    ]);
 
 
     $stmt = $pdo->prepare("
-        INSERT INTO alignments (id_analysis, alignment_data)
+        INSERT INTO alignments
+        (id_analysis, alignment_data)
         VALUES (?, ?)
     ");
 
-    $stmt->execute([$id_analysis, $alignment]);
+    $stmt->execute([
+        $id_analysis,
+        $alignment
+    ]);
 
 
     $stmt = $pdo->prepare("
-        INSERT INTO motifs (id_analysis, motif_data)
+        INSERT INTO motifs
+        (id_analysis, motif_data)
         VALUES (?, ?)
     ");
 
-    $stmt->execute([$id_analysis, $motifs]);
-
+    $stmt->execute([
+        $id_analysis,
+        $motifs
+    ]);
 
     return $id_analysis;
 }
-
 ?>
