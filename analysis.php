@@ -6,11 +6,15 @@ require_once 'db.php';
 require_once 'analysis_functions.php';
 
 require_once 'menu.php';
+echo "<h2 class='section-title'>Additional Analysis</h2>";
 
 echo "<div class = 'container'>";
 if(!isset($_SESSION['id_analysis']))
 {
-    echo "Please select a dataset first.";
+
+    echo "<p class='info-text'>";
+    echo "Please select a dataset first";
+    echo "</p>";
     echo "</div>";
     exit;
 }
@@ -53,28 +57,28 @@ if(isset($_POST['analysis']))
 
 ?>
 <div class = 'container'>
-<div class='analysis-grid'>
+<div class='dataset-grid'>
 
 <form method="POST">
-<button name="analysis" value="stats">
+<button class = "history-card"  name="analysis" value="stats">
 Generate Dataset Statistics
 </button>
 </form>
 
 <form method="POST">
-<button name="analysis" value="length_plot">
+<button class="history-card" name="analysis" value="length_plot">
 Generate Sequence Length Distribution
 </button>
 </form>
 
 <form method="POST">
-<button name="analysis" value="residue_conserve">
+<button class="history-card" name="analysis" value="residue_conserve">
 Generate Residue Conservation Plot
 </button>
 </form>
 
 <form method="POST">
-<button name="analysis" value="aa_comp">
+<button class="history-card" name="analysis" value="aa_comp">
 Generate Amino Acid Composition Plot
 </button>
 </form>
@@ -86,7 +90,7 @@ Generate Amino Acid Composition Plot
 <br><br>
 
 
-<div class="plot-grid">
+<div class="dataset-grid">
 
 
 <?php
@@ -96,32 +100,29 @@ foreach($_SESSION['generated_analyses'] as $analysis)
 
     if($analysis == "length_plot")
     {
-        echo "<div>";
-        echo "<h4>Sequence Length Distribution</h4>";
+        echo "<div class='card'>";
         echo "<img src='plot.php?type=length&id=$id&t=".time()."'>";
         echo "</div>";
     }
 
     if($analysis == "residue_conserve")
     {
-        echo "<div>";
-        echo "<h4>Residue Conservation</h4>";
+        echo "<div class='card'>";
         echo "<img src='plot.php?type=conservation&id=$id&t=".time()."'>";
         echo "</div>";
     }
 
     if($analysis == "aa_comp")
     {
-        echo "<div>";
-        echo "<h4>Amino Acid Composition</h4>";
+        echo "<div class='card'>";
         echo "<img src='plot.php?type=aa&id=$id&t=".time()."'>";
         echo "</div>";
     }
 
     if($analysis == "stats")
     {
-        echo "<div>";
-        echo "<h4>Dataset Statistics</h4>";
+        echo "<div class='card'>";
+        echo "<h4 style='text-align: center; margin-bottom: 20px;'>Dataset Statistics</h4>";
         echo get_statistics($sequences);
         echo "</div>";
     }

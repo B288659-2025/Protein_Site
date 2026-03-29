@@ -1,22 +1,19 @@
 import sys
 import matplotlib.pyplot as plt
 from collections import Counter
+from Bio import SeqIO
 
 fasta_file = sys.argv[1]
 output_png = sys.argv[2]
 
-seq = ""
-with open(fasta_file) as f:
-    for line in f:
-        if not line.startswith(">"):
-            seq += line.strip()
+all_residues = ""
 
-counts = Counter(seq)
+for record in SeqIO.parse(fasta_file, "fasta"):
+    all_residues += str(record.seq)
 
-aa = list(counts.keys())
-freq = list(counts.values())
+counts = Counter(all_residues)
 
-plt.bar(aa, freq)
+plt.bar(counts.keys(), counts.values())
 
 plt.xlabel("Amino Acid")
 plt.ylabel("Frequency")

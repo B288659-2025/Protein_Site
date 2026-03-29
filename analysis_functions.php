@@ -21,8 +21,8 @@ function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual
 
     // Step 1: search for IDs
     $search_url =
-        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi".
-        "?db=protein&term={$term}&retmax={$maxseq}";
+       "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi".
+       "?db=protein&term={$term}&retmax={$maxseq}&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
 
     $search_xml = file_get_contents($search_url);
     if(!$search_xml) {
@@ -49,7 +49,7 @@ function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual
     // Step 2: fetch FASTA sequences
     $fetch_url =
         "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi".
-        "?db=protein&id={$id_string}&rettype=fasta&retmode=text";
+        "?db=protein&id={$id_string}&rettype=fasta&retmode=text&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
 
     $fasta = file_get_contents($fetch_url);
 
@@ -70,8 +70,6 @@ function run_alignment($fasta)
 
     return "";
 }
-
-
 
 function run_motifs($fasta)
 {
@@ -128,63 +126,19 @@ function generate_aa_composition_plot($fasta, $id)
     return $plot_file;
 }
 
-function get_statistics($sequences)
+function get_statistics($fasta)
 {
-    $lengths = [];
+    $fasta_file = "/tmp/stats.fasta";
 
-    $seq = "";
-    foreach(explode("\n", $sequences) as $line)
-    {
-        if(str_starts_with($line, ">"))
-        {
-            if($seq != "")
-            {
-                $lengths[] = strlen($seq);
-                $seq = "";
-            }
-        }
-        else
-        {
-            $seq .= trim($line);
-        }
-    }
+    file_put_contents($fasta_file, $fasta);
 
-    if($seq != "")
-    {
-        $lengths[] = strlen($seq);
-    }
+    $cmd =
+        "python3 /localdisk/home/s2794196/public_html/protein_site/stats_biopython.py "
+        . $fasta_file;
 
-    $count = count($lengths);
-    $min = min($lengths);
-    $max = max($lengths);
-    $avg = array_sum($lengths) / $count;
-
-    return "
-    <div class='stats-card'>
-
-    <div class='stat-row'>
-    <span>Number of sequences</span>
-    <strong>$count</strong>
-    </div>
-
-    <div class='stat-row'>
-    <span>Shortest sequence</span>
-    <strong>$min</strong>
-    </div>
-
-    <div class='stat-row'>
-    <span>Longest sequence</span>
-    <strong>$max</strong>
-    </div>
-
-    <div class='stat-row'>
-    <span>Average length</span>
-    <strong>" . round($avg,2) . "</strong>
-    </div>
-
-    </div>
-";
+    return shell_exec($cmd);
 }
+
 function save_analysis(
     $pdo,
     $protein,
@@ -199,8 +153,8 @@ function save_analysis(
 )
 {
     // Get logged in user
-    $id_user = $_SESSION["id_user"];
-
+    $id_user = $_SESSION["id_user"] ?? null;
+    $session_id = session_id();
 
     $stmt = $pdo->prepare("
         INSERT INTO analyses
@@ -210,11 +164,12 @@ function save_analysis(
             taxon,
             seq_max,
             id_user,
+            session_id,
             exclude_partial,
             manual_only,
             exclude_frag
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
@@ -223,6 +178,7 @@ function save_analysis(
         $taxon,
         $maxseq,
         $id_user,
+	$session_id,
         $exclude_partial,
         $manual_only,
         $exclude_frag
@@ -267,5 +223,31 @@ function save_analysis(
     ]);
 
     return $id_analysis;
+}
+function search_exists($pdo, $protein, $taxon, $seq_max,
+                       $exclude_partial, $manual_only, $exclude_frag)
+{
+    $stmt = $pdo->prepare("
+        SELECT 1
+        FROM analyses
+        WHERE protein = ?
+        AND taxon = ?
+        AND seq_max = ?
+        AND exclude_partial = ?
+        AND manual_only = ?
+        AND exclude_frag = ?
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        $protein,
+        $taxon,
+        $seq_max,
+        $exclude_partial,
+        $manual_only,
+        $exclude_frag
+    ]);
+
+    return $stmt->fetchColumn();
 }
 ?>
