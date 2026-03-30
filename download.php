@@ -26,7 +26,7 @@ if (!mkdir($tmp_dir))
 
 
 $something_selected = false;
-
+$copied_any = false;
 
 if (isset($_POST['export_sequences']))
 {
@@ -118,26 +118,31 @@ if (isset($_POST['export_figures']))
     $figures = [
         "/tmp/length_plot_" . $id . ".png",
         "/tmp/conservation_plot_" . $id . ".png",
-        "/tmp/aa_comp_" . $id . ".png"
-    ];
+        "/tmp/aa_comp_" . $id . ".png", 
+        "/tmp/heatmap_" . $id . ".png",
+        "/tmp/conserved_regions_" . $id . ".png"
+];
 
-    foreach ($figures as $file)
+
+foreach ($figures as $file)
+{
+    if (file_exists($file))
     {
-        if (file_exists($file))
-        {
-            copy(
-                $file,
-                $tmp_dir . "/" . basename($file)
-            );
-        }
-        else
-        {
-            echo "Missing figure: " . $file;
-            exit;
-        }
+        copy(
+            $file,
+            $tmp_dir . "/" . basename($file)
+        );
+
+        $copied_any = true;
     }
 }
 
+}
+if (isset($_POST['export_figures']) && !$copied_any)
+{
+    echo "No figures available to export.";
+    exit;
+}
 if (!$something_selected)
 {
     header("Location: export.php?error=1");

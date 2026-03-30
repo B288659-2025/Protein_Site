@@ -1,6 +1,6 @@
 <?php
 require 'menu.php';
-echo "<h2 class='section-title'>About Page</h2>";
+echo "<h2 class='section-title'>About Us</h2>";
 require_once 'db.php';
 ?>
 <div class="container">
@@ -15,8 +15,8 @@ require_once 'db.php';
 
     <p>
      After retrieving sequences, users can carry out multiple sequence alignment and look for conserved motifs within the data.
-     The website also offers extra analysis tools, such as creating dataset statistics, sequence length distribution plots, residue conservation plots, and amino acid composition plots.
-     These tools help users understand the main features and patterns in the protein sequences.
+     The website also offers extra analysis tools, such as creating dataset statistics, sequence length distribution plots, residue conservation plots, amino acid composition plots,
+      sequence similarity heatmaps, and conserved regions plots. These tools help users understand the main features and patterns in the protein sequences.
     </p>
 
     <p>

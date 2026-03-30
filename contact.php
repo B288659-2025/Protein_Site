@@ -3,8 +3,20 @@ require 'menu.php';
 echo "<h2 class='section-title'>Contact us</h2>";
 $submitted = false;
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST")
+{
     $submitted = true;
+
+    $name = $_POST['name'] ?? null;
+    $email = $_POST['email'] ?? null;
+    $message = $_POST['message'];
+
+    $stmt = $pdo->prepare("
+        INSERT INTO contact_messages (name, email, message)
+        VALUES (?, ?, ?)
+    ");
+
+    $stmt->execute([$name, $email, $message]);
 }
 ?>
 

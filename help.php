@@ -18,8 +18,8 @@ require_once 'db.php';
 
         <h3>How to Run a Search</h3>
         <ol>
-            <li>Enter a protein name.</li>
-            <li>Enter a taxon, for example Aves or Homo sapiens.</li>
+            <li>Enter a protein name (can also select from the example drop down menu).</li>
+            <li>Enter a taxon (can also select from the example drop down menu).</li>
             <li>Choose the maximum number of sequences.</li>
             <li>Select any filters if required.</li>
             <li>Click the Run Analysis button.</li>
@@ -73,7 +73,8 @@ require_once 'db.php';
         <p>
             The system provides an export function that allows users to download generated results,
             including retrieved sequences, sequence alignments, motif findings, and analysis outputs.
-            Files can be saved in common formats such as FASTA or text files.
+            Files can be saved in common formats such as FASTA or text files. 
+            Users can select which dataset to download from a dropdown menu listing their previously generated analyses.
         </p>
 
 

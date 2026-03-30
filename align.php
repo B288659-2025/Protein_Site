@@ -1,15 +1,18 @@
 <?php
 session_start();
-//echo "<h1 style='text-align:center;'>Aligned Protein Sequences</h1>";
 
 require_once 'menu.php';
+echo "<h2 class='section-title'>Sequence Alignment</h2>";
 require_once 'db.php';
 echo "<div class='container'>";
 
 $id_analysis = $_SESSION['id_analysis'] ?? null;
 if(!$id_analysis)
 {
-    echo "Please select a dataset first.";
+    echo "<p class='info-text'>";
+    echo "Please select a dataset first";
+    echo "</p>";
+
     echo "</div>";
     exit;
 }
@@ -23,7 +26,15 @@ WHERE id_analysis = ?
 $stmt->execute([$id_analysis]);
 
 $alignment = $stmt->fetchColumn();
+if (!$alignment || trim($alignment) == "")
+{
+    echo "<p class='info-text'>";
+    echo "Alignment requires at least 2 sequences.";
+    echo "</p>";
 
+    echo "</div>";
+    exit;
+}
 
 echo "<div class='fasta-container'>";
 
@@ -38,10 +49,11 @@ foreach ($alignment as $align)
     $sequence = implode("", $lines);
 
     echo "<div class='sequence-card'>";
-    echo "<div class='sequence-header'>" . $header . "</div>";
+    echo "<div class='sequence-header'> >$header</div>";
     echo "<div class='sequence-body'>" . $sequence . "</div>";
     echo "</div>";
 }
 
 echo "</div>";
+
 ?>
