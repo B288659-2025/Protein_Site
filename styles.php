@@ -5,6 +5,50 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+
+.center-button {
+    padding: 15px 25px;
+    background: #5D6C7A;
+    border-radius: 10px;
+    border: 1px solid;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 240px;
+}
+.button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin-top: 30px;
+    width: 100%;
+}
+.forgot-row {
+    width: 100%;
+    text-align: right;
+    margin-top: -6px;
+    margin-bottom: 14px;
+}
+.form-row {
+    display: flex;
+    align-content: center;
+    margin-bottom: 12px;
+}
+
+.form-row label {
+    width: 180px;
+}
+.site-logo {
+    height: 150px;
+    width: auto;
+}
+.nav-left,
+.nav-right {
+    display: flex;
+    gap: 18px;
+}
 .export-option select {
     appearance: none;
     background-color: #f8fafc;
@@ -57,15 +101,15 @@
 }
 .section-title {
     font-weight: bold;
-    margin-top: 0px;
+    margin-top: 20px;
     font-family: 'IBM Plex Sans', sans-serif;
-    font-size: 22px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    background:#2c3e50;
-    color:white;
+    font-size: 24px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    //background: #8594A1;
+    color:#2c3e50;
     text-align:center;
-    padding:10px 0px 15px 0px;
+    padding:10px 0px 0px 0px;
 
 }
 .spinner {
@@ -84,16 +128,18 @@
 }
 body{
     font-family: 'IBM Plex Sans', sans-serif;
-    background:#D0D5DB;
+    //background:#D0D5DB;
     margin:0;
+    background: #E8E4E1;
 }
 
-.site-header{
-    background:#2c3e50;
-    color:white;
-    text-align:center;
-    padding:25px 20px 0px 20px;
-    border-bottom: 2px solid #525F6E;
+.site-header {
+    background-color: #2c3e50;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
 }
 
 .site-title{
@@ -108,12 +154,14 @@ body{
 }
 
 nav{
-    background:#525F6E;
-    padding:10px 0;
+    //background:#8594A1;
+    //background: #2c3e50;
+    background: #5D6C7A;
+    //background: #E8E4E1;
+    padding:10px 0px;
     display:flex;
     flex-wrap:wrap;
     justify-content:center;
-    border-bottom: 2px solid #525F6E;
     gap:20px;
 }
 nav a{
@@ -124,26 +172,30 @@ nav a{
 
 .container{
     max-width:1200px;
-    margin:40px auto;
-    padding:0 20px;
+    margin:10px auto;
+    padding:0 10px;
 }
 
 .sequence-card{
     background:white;
-    padding:18px;
-    margin-bottom:16px;
+    padding:20px;
+    margin-bottom:19px;
     border-radius:10px;
     box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    font-size:15px;
+    margin-top: 15px;
+    font-weight:550;
+    color: #A6361E;
 }
 
 .sequence-body{
     font-family: monospace;
-    font-size:14px;
+    font-size:15px;
     line-height:1.4;
-
     background:#f5f7fa;
     padding:12px;
     border-radius:6px;
+    color:#2c3e50;
 
     overflow-x: auto;
     white-space: pre-wrap;
@@ -157,7 +209,7 @@ nav a{
     max-width: 800px;    
     display: flex;
     flex-direction: column;
-    margin: 30px auto;
+    margin: 20px auto;
     box-shadow: 0 6px 16px rgba(0,0,0,0.12);
     flex: 0 0 auto;
     width: 100%;
@@ -181,7 +233,7 @@ nav a{
     margin-top: auto;
     text-align: center;
     padding: 15px;
-    background-color: #525F6E;   
+    background-color: #2c3e50;  
     color: white;
     font-size: 14px;
     font-family: 'IBM Plex Sans', sans-serif;
@@ -192,15 +244,14 @@ nav a{
 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 24px;
+    gap: 40px;
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
 }
 .history-card {
 
-    display: block;
+    display: inline-block;
     width: 100%;
     padding: 30px;
     border: 1px solid #e5e7eb;
@@ -293,14 +344,15 @@ body {
 }
 .login-card {
 
-    display: block;
-    width: auto;
+    display: inline-block;
+    width: fit-content;
+    max-width: 400px;
     padding: 15px;
     background: #5D6C7A;
     cursor: pointer;
     border-radius:10px;
     border: 1px solid;
-    text-align: left;
+    text-align:left;
     font-size: 12px;
     color: white;
     font-weight: bold;
@@ -319,7 +371,6 @@ label {
     gap: 10px;
 }
 .export-option {
-    display: flex;
     align-items: center;
     margin-bottom: 12px;
 }
@@ -327,6 +378,27 @@ label {
 .export-option label {
     cursor: pointer;
     user-select: none;
+}
+.dash-card {
+    background: white;
+    padding: 35px;
+    border-radius: 10px;
+    max-width: 800px;    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 20px auto;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    flex: 0 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+
+}
+.dash-card form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 </style>
 

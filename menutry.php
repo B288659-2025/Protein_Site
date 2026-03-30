@@ -7,8 +7,11 @@ require_once 'header.php';
 ?>
 
 <nav>
-<a href="about.php">About</a>
+
+<div class="nav-left">
+
 <a href="index.php">Search</a>
+<a href="about.php">About</a>
 <a href="seq.php">Sequences</a>
 <a href="align.php">Alignment</a>
 <a href="motif.php">Motif Scan</a>
@@ -16,9 +19,14 @@ require_once 'header.php';
 <a href="previous.php">History</a>
 <a href="export.php">Export Results</a>
 <a href="read.php">Read More</a>
+<a href="credits.php">Credits</a>
+
+</div>
+
+<div class="nav-right">
+
 <a href="help.php">Help</a>
 <a href="contact.php">Contact us</a>
-<a href="credits.php">Credits</a>
 
 <?php if (isset($_SESSION["id_user"]) && $_SESSION["id_user"] !== null): ?>
 
@@ -29,8 +37,10 @@ require_once 'header.php';
 <a href="loginu.php">Login</a>
 
 <?php endif; ?>
-</nav>
 
+</div>
+
+</nav>
 <main class="page-content">
 
 <?php
@@ -38,7 +48,7 @@ require_once 'header.php';
 function render_footer() {
     echo "</div>";
     echo "<div class='footer'>";
-    echo "Protalyze Protein Analysis Platform<br>";
+    echo "Protalyze Protein Analysis Toolkit<br>";
     echo "University of Edinburgh";
     echo "</div>";
     echo "</body>";

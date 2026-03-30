@@ -3,6 +3,7 @@
 session_start();
 if (isset($_POST['id_analysis'])) {
     $_SESSION['id_analysis'] = $_POST['id_analysis'];
+    $_SESSION['generated_analyses'] = [];
 }
 require_once 'db.php';
 require_once 'analysis_functions.php';
@@ -39,6 +40,7 @@ if(isset($_POST['example_dataset']))
     }
 
     $_SESSION['id_analysis'] = $example_id;
+    $_SESSION['generated_analyses'] = [];
 }
 
 if(isset($_POST['protein']) && isset($_POST['taxon']))
@@ -57,6 +59,7 @@ if(isset($_POST['protein']) && isset($_POST['taxon']))
     if($existing_id)
     {
        $_SESSION['id_analysis'] = $existing_id;
+       $_SESSION['generated_analyses'] = [];
        header("Location: seq.php");
        exit;
     }

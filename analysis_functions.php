@@ -86,11 +86,12 @@ function run_motifs($fasta)
     return "";
 }
 
-function generate_length_plot($fasta, $id_analysis)
+function generate_length_plot($fasta, $id)
 {
-    $fasta_file = "/tmp/sequences.fasta";
-    $plot_file = "/tmp/length_plot_$id_analysis.png";
-
+//    $fasta_file = "/tmp/sequences.fasta";
+//    $plot_file = "/tmp/length_plot_$id_analysis.png";
+    $fasta_file = "/tmp/sequences_" . $id . ".fasta";
+    $plot_file  = "/tmp/length_plot_" . $id . ".png";
     file_put_contents($fasta_file, $fasta);
 
     $cmd = "/usr/bin/python3 /localdisk/home/s2794196/public_html/protein_site/plot_lengths.py $fasta_file $plot_file 2>&1";
@@ -121,6 +122,31 @@ function generate_aa_composition_plot($fasta, $id)
     file_put_contents($fasta_file, $fasta);
 
     $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_aa_comp.py $fasta_file $plot_file";
+    shell_exec($cmd);
+
+    return $plot_file;
+}
+
+function generate_heatmap_plot($alignment, $id)
+{
+    $aln_file = "/tmp/alignment_" . $id . ".fasta";
+    $plot_file = "/tmp/heatmap_" . $id . ".png";
+
+    file_put_contents($aln_file, $alignment);
+
+    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_heatmap.py $aln_file $plot_file";
+    shell_exec($cmd);
+
+    return $plot_file;
+}
+function generate_conserved_regions_plot($alignment, $id)
+{
+    $aln_file = "/tmp/alignment_" . $id . ".fasta";
+    $plot_file = "/tmp/conserved_regions_" . $id . ".png";
+
+    file_put_contents($aln_file, $alignment);
+
+    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_conserved_regions.py $aln_file $plot_file";
     shell_exec($cmd);
 
     return $plot_file;

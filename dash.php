@@ -94,11 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $stmt->execute([$email]);
 
-        if ($stmt->fetch()) {
-            $success = "If this email exists, a password reset link would be sent. This functionality is simulated in this system, but a reset link would normally be sent to the registered email address.";
-        } else {
-            $success = "If this email exists, a password reset link would be sent. This functionality is simulated in this system, but a reset link would normally be sent to the registered email address.";
-        }
+        $success = "Password reset request submitted.
+        If an account is associated with this email, the system administrator will handle the password reset.";    
 
         $mode = "forgot";
     }
@@ -110,7 +107,7 @@ echo '<div class="section-title">Welcome to the Protalyze Protein Analysis Porta
 echo "<div class='container'>";
 ?>
 
-<div class="card">
+<div class="dash-card">
 
 <?php if ($mode === 'login') { ?>
 
@@ -128,43 +125,37 @@ if (isset($_GET["created"])) {
 
 <form method="POST">
 
-<label>Email:</label>
-<br>
-<input type="email" name="email" required>
+<div class="form-row">
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+</div>
 
-<br><br>
+<div class="form-row">
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+</div>
 
-<label>Password:</label>
-<br>
-<input type="password" name="password" required>
+<div class="forgot-row">
+    <a href="dash.php?mode=forgot">
+        Forgot password?
+    </a>
+</div>
 
-<br><br>
-
-<button class = "login-card" type="submit" name="login">
+<button class="login-card" type="submit" name="login">
 Log In
 </button>
 
 </form>
-
 <br>
 
-<p>
-<a href="dash.php?mode=forgot">
-Forgot password?
-</a>
-</p>
 
 <p>
-Don't have an account?
-<a href="dash.php?mode=signup">
-Sign up
-</a>
+Don't have an account?<br>
+<a href="dash.php?mode=signup">Sign up</a>
+or
+<a href="index.php">continue as guest</a>
 </p>
 
-<form method="POST">
-<button class = "login-card" type="submit" name="guest">
-Continue as Guest
-</button>
 </form>
 
 <?php } ?>
@@ -181,56 +172,63 @@ if (isset($error)) {
 
 <form method="POST">
 
-<label>First name:</label>
-<br>
-<input type="text" name="first" required>
+<div class="form-row">
+    <label for="first">First name:</label>
+    <input type="text" id="first" name="first" required>
+</div>
 
-<br><br>
+<div class="form-row">
+    <label for="last">Last name:</label>
+    <input type="text" id="last" name="last" required>
+</div>
 
-<label>Last name:</label>
-<br>
-<input type="text" name="last" required>
+<div class="form-row">
+    <label for="signup_email">Email:</label>
+    <input type="email" id="signup_email" name="signup_email" required>
+</div>
 
-<br><br>
+<div class="form-row">
+    <label for="signup_password">Password:</label>
+    <input type="password" id="signup_password" name="signup_password" required>
+</div>
 
-<label>Email:</label>
-<br>
-<input type="email" name="signup_email" required>
-
-<br><br>
-
-<label>Password:</label>
-<br>
-<input type="password" name="signup_password" required>
-
-<br><br>
-
-<button class = "login-card" type="submit" name="signup">
+<button class="login-card" type="submit" name="signup">
 Create Account
 </button>
 
 </form>
-
 <br>
 
 <p>
-Already have an account?
-<a href="dash.php">
-Log in
-</a>
+Already have an account?<br>
+<a href="dash.php?">Log in</a>
+or
+<a href="index.php">continue as guest</a>
 </p>
+
+
 
 <?php } ?>
 
-<?php if ($mode === 'forgot') { ?>
+<?php if ($mode === 'forgot'): ?>
 
 <h2>Forgot Password</h2>
 
-<?php
-if (isset($success)) {
-    echo "<p style='color:green;'>$success</p>";
-}
-?>
+<?php if (isset($success)): ?>
+<p class="info-text">
+<?php echo $success; ?>
+</p>
+
+<br>
+<a href="dash.php">
+Back to login
+</a>
+
+<?php else: ?>
+
+<p class="info-text">
+Enter the email associated with your account. Password reset requests are handled manually by the system administrator.
+</p>
 
 <form method="POST">
 
@@ -240,21 +238,16 @@ if (isset($success)) {
 
 <br><br>
 
-<button type="submit" name="forgot">
+<button class="login-card" type="submit" name="forgot">
 Reset Password
 </button>
 
 </form>
 
-<br>
+<?php endif; ?>
 
-<p>
-<a href="dash.php">
-Back to login
-</a>
-</p>
+<?php endif; ?>
 
-<?php } ?>
 </div>
 </div>
 <div class="footer">

@@ -1,7 +1,6 @@
 <?php
 
 session_start();
-
 require_once 'menu.php';
 echo "<h2 class='section-title'>Search Page</h2>";
 
@@ -27,14 +26,53 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
 <!-- Run Custom Search -->
 
 <form id="analysis_form" method="POST" action="seq.php" onsubmit="showLoading()">
-Protein family:<br>
-<input type="text" name="protein" required><br><br>
 
-Taxonomic group:<br>
-<input type="text" name="taxon" required><br><br>
+<div class="form-row">
+    <label for="protein">Protein family:</label>
 
-Maximum sequences:<br>
-<input type="number" name="seq_max" value="30"><br><br>
+    <input
+        type="text"
+        id="protein"
+        name="protein"
+        list="protein_list"
+        required
+    >
+
+    <datalist id="protein_list">
+        <option value="glucose-6-phosphatase">
+        <option value="cytochrome c">
+        <option value="hemoglobin">
+        <option value="insulin">
+        <option value="kinase">
+        <option value="ATP synthase">
+    </datalist>
+</div>
+
+
+<div class="form-row">
+    <label for="taxon">Taxonomic group:</label>
+
+    <input
+        type="text"
+        id="taxon"
+        name="taxon"
+        list="taxon_list"
+        required
+    >
+
+    <datalist id="taxon_list">
+        <option value="Aves">
+        <option value="Mammalia">
+        <option value="Rodentia">
+        <option value="Primates">
+        <option value="Vertebrata">
+        <option value="Reptilia">
+    </datalist>
+</div>
+<div class="form-row">
+    <label for="seq_max">Maximum sequences:</label>
+    <input type="number" id="seq_max" name="seq_max" value="30">
+</div>
 
 <h4>Quality filters (optional)</h4>
 

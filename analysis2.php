@@ -2,29 +2,6 @@
 
 session_start();
 
-if (isset($_POST['display_all']))
-{
-    $_SESSION['generated_analyses'] = [
-        'stats',
-        'length_plot',
-        'residue_conserve',
-        'aa_comp',
-        'heatmap',
-        'cons'
-    ];
-}
-
-elseif (isset($_POST['generate_selected']) && isset($_POST['analysis']))
-{
-    $_SESSION['generated_analyses'] = $_POST['analysis'];
-}
-
-if (!isset($_SESSION['generated_analyses']))
-{
-    $_SESSION['generated_analyses'] = [];
-}
-
-
 require_once 'db.php';
 require_once 'analysis_functions.php';
 
@@ -45,6 +22,7 @@ if(!isset($_SESSION['id_analysis']))
 $id = $_SESSION['id_analysis'];
 
 
+
 $stmt = $pdo->prepare("
 SELECT fasta_data
 FROM sequences
@@ -54,11 +32,18 @@ WHERE id_analysis = ?
 $stmt->execute([$id]);
 $sequences = $stmt->fetchColumn();
 
+
+
 if(!isset($_SESSION['generated_analyses']))
 {
     $_SESSION['generated_analyses'] = [];
 }
 
+
+if(!isset($_POST['analysis']))
+{
+    $_SESSION['generated_analyses'] = [];
+}
 
 if(isset($_POST['analysis']))
 {
@@ -71,62 +56,51 @@ if(isset($_POST['analysis']))
 }
 
 ?>
-
-<div class="container">
+<div class = 'container'>
+<div class='dataset-grid'>
 
 <form method="POST">
-
-<div class = "history-card">
-
-<div class="dataset-grid">
-
-<label>
-<input type="checkbox" name="analysis[]" value="stats">
+<button class = "history-card"  name="analysis" value="stats">
 Generate Dataset Statistics
-</label>
-
-<label>
-<input type="checkbox" name="analysis[]" value="length_plot">
-Generate Sequence Length Distribution
-</label>
-
-<label>
-<input type="checkbox" name="analysis[]" value="residue_conserve">
-Generate Residue Conservation Plot
-</label>
-
-<label>
-<input type="checkbox" name="analysis[]" value="aa_comp">
-Generate Amino Acid Composition Plot
-</label>
-
-<label>
-<input type="checkbox" name="analysis[]" value="heatmap">
-Generate Sequence Similarity Heatmap
-</label>
-
-<label>
-<input type="checkbox" name="analysis[]" value="cons">
-Generate Conservation Regions Plot
-</label>
-</div>
-
-<div class="button-row">
-    <button class="center-button" type="submit" name="generate_selected">
-        Generate Selected Analyses
-    </button>
-
-    <button class="center-button" type="submit" name="display_all">
-        Display All Analyses
-    </button>
-
-</div>
-</div>
-
-<br>
+</button>
 </form>
 
+<form method="POST">
+<button class="history-card" name="analysis" value="length_plot">
+Generate Sequence Length Distribution
+</button>
+</form>
+
+<form method="POST">
+<button class="history-card" name="analysis" value="residue_conserve">
+Generate Residue Conservation Plot
+</button>
+</form>
+
+<form method="POST">
+<button class="history-card" name="analysis" value="aa_comp">
+Generate Amino Acid Composition Plot
+</button>
+</form>
+
+<form method="POST">
+<button class="history-card" name="analysis" value="heatmap">
+Generate Sequence Similarity Heatmap
+</button>
+</form>
+
+
+<form method="POST">
+<button class="history-card" name="analysis" value="cons">
+Generate Conservation Regions Plot
+</button>
+</form>
+
+
+
+
 </div>
+
 
 <br><br>
 
@@ -135,7 +109,6 @@ Generate Conservation Regions Plot
 
 
 <?php
-
 
 foreach($_SESSION['generated_analyses'] as $analysis)
 {
