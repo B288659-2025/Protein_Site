@@ -1,178 +1,181 @@
 <?php
 
+// Start the session if it has not already been started
 if (session_status() === PHP_SESSION_NONE)
 {
-    session_start();
+	session_start();
 }
 
+// Include database connection because we are retrieving data from the database
 require_once "db.php";
 
+
+// Get the current dataset id from the session
 $id = $_SESSION['id_analysis'] ?? null;
 
+
+// Stop if no dataset has been selected
 if (!$id)
 {
-    echo "Please select a dataset first";
-    exit;
+	echo "Please select a dataset first";
+	exit;
 }
 
 
+// Create a unique temporary folder to store export files
 $tmp_dir = sys_get_temp_dir() . "/export_" . uniqid();
 
+// Small safety check to ensure the directly is correctly made
 if (!mkdir($tmp_dir))
 {
-    echo "Could not create temporary directory";
-    exit;
+	echo "Could not create temporary directory";
+	exit;
 }
 
 
+// Track whether the user selected anything to export
 $something_selected = false;
+
+// Track whether any figure files were made - since the additional analyses are optional
 $copied_any = false;
 
+
+// Export sequences if selected
 if (isset($_POST['export_sequences']))
 {
-    $something_selected = true;
+	$something_selected = true;
 
-    $format = $_POST['sequences_format'] ?? "fasta";
+	// Get selected file format, default is FASTA
+	$format = $_POST['sequences_format'] ?? "fasta";
 
-    $stmt = $pdo->prepare("
-        SELECT fasta_data
-        FROM sequences
-        WHERE id_analysis = ?
-    ");
+	$stmt = $pdo->prepare("SELECT fasta_data FROM sequences WHERE id_analysis = ?");
+	$stmt->execute([$id]);
 
-    $stmt->execute([$id]);
+	$sequences = $stmt->fetchColumn();
 
-    $sequences = $stmt->fetchColumn();
+	if ($sequences)
+	{
+		if ($format == "txt")
+		{
+			$filename = "sequences.txt";
+		}
+		else
+		{
+			$filename = "sequences.fasta";
+		}
 
-    if ($sequences)
-    {
-        if ($format == "txt")
-        {
-            $filename = "sequences.txt";
-        }
-        else
-        {
-            $filename = "sequences.fasta";
-        }
-
-        file_put_contents(
-            $tmp_dir . "/" . $filename,
-            $sequences
-        );
-    }
+		file_put_contents($tmp_dir . "/" . $filename, $sequences);
+	}
 }
 
 
+// Export alignment if selected
 if (isset($_POST['export_alignment']))
 {
-    $something_selected = true;
+	$something_selected = true;
 
-    $format = $_POST['alignment_format'] ?? "fasta";
+	// Get selected format, default is FASTA
+	$format = $_POST['alignment_format'] ?? "fasta";
 
-    $source_file = "/tmp/alignment.aln";
+	$source_file = "/tmp/alignment.fasta";
 
-    if (!file_exists($source_file))
-    {
-        echo "Alignment file not found";
-        exit;
-    }
+	if (!file_exists($source_file))
+	{
+		echo "Alignment file not found";
+		exit;
+	}
 
-    if ($format == "txt")
-    {
-        $filename = "alignment.txt";
-    }
-    else
-    {
-        $filename = "alignment.fasta";
-    }
+	if ($format == "txt")
+	{
+		$filename = "alignment.txt";
+	}
+	else
+	{
+		$filename = "alignment.fasta";
+	}
 
-    copy(
-        $source_file,
-        $tmp_dir . "/" . $filename
-    );
+	copy($source_file,$tmp_dir . "/" . $filename);
 }
 
+
+// Export motif report if selected
 if (isset($_POST['export_motif_report']))
 {
-    $something_selected = true;
+	$something_selected = true;
 
-    $file = "/tmp/motifs.txt";
+	$file = "/tmp/motifs.txt";
 
-    if (file_exists($file))
-    {
-        copy(
-            $file,
-            $tmp_dir . "/motif_report.txt"
-        );
-    }
+	if (file_exists($file))
+	{
+		copy($file, $tmp_dir . "/motif_report.txt");
+	}
 }
 
 
-
+// Export figures if selected
 if (isset($_POST['export_figures']))
 {
-    $something_selected = true;
+	$something_selected = true;
 
-    $id = $_SESSION['id_analysis'];
+	$id = $_SESSION['id_analysis'];
 
-    $figures = [
-        "/tmp/length_plot_" . $id . ".png",
-        "/tmp/conservation_plot_" . $id . ".png",
-        "/tmp/aa_comp_" . $id . ".png", 
-        "/tmp/heatmap_" . $id . ".png",
-        "/tmp/conserved_regions_" . $id . ".png"
-];
+	// List of possible figure files
+	$figures = ["/tmp/length_plot_" . $id . ".png", "/tmp/conservation_plot_" . $id . ".png", "/tmp/aa_comp_" . $id . ".png", "/tmp/heatmap_" . $id . ".png", "/tmp/conserved_regions_" . $id . ".png"];
 
-
-foreach ($figures as $file)
-{
-    if (file_exists($file))
-    {
-        copy(
-            $file,
-            $tmp_dir . "/" . basename($file)
-        );
-
-        $copied_any = true;
-    }
+	// Copy each figure if it exists
+	foreach ($figures as $file)
+	{
+		if (file_exists($file))
+		{
+			copy($file, $tmp_dir . "/" . basename($file));
+			$copied_any = true;
+		}
+	}
 }
 
-}
+
+// If user selected figures but none exist, show message
 if (isset($_POST['export_figures']) && !$copied_any)
 {
-    echo "No figures available to export.";
-    exit;
+	echo "No figures available to export.";
+	exit;
 }
+
+
+// If user selected nothing at all, return to export page with error
 if (!$something_selected)
 {
-    header("Location: export.php?error=1");
-    exit;
+	header("Location: export.php?error=1");
+	exit;
 }
 
 
+// Create zip file from the temporary export folder
 $zip_file = $tmp_dir . ".zip";
 
-$command = "zip -r " .
-           escapeshellarg($zip_file) .
-           " " .
-           escapeshellarg($tmp_dir);
+// Source for escapeshellarg: https://www.php.net/manual/en/function.escapeshellarg.php
+// Source for exec: https://www.php.net/manual/en/function.escapeshellarg.php
+$command = "zip -r " . escapeshellarg($zip_file) . " " . escapeshellarg($tmp_dir);
 
 exec($command);
 
 
+// Send the zip file to the browser for download
+// Header function source: https://www.php.net/manual/en/function.header.php
 header("Content-Type: application/zip");
 header("Content-Disposition: attachment; filename=export_results.zip");
 header("Content-Length: " . filesize($zip_file));
 
+// Readfile source: https://www.php.net/manual/en/function.readfile.php
 readfile($zip_file);
 
 
+// Delete the zip file after sending it
 unlink($zip_file);
 
-exec(
-    "rm -rf " .
-    escapeshellarg($tmp_dir)
-);
+
+// Delete the temporary export folder and its contents
+exec("rm -rf " .escapeshellarg($tmp_dir));
 
 exit;
 

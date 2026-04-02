@@ -1,20 +1,39 @@
 <?php
 
 session_start();
-require_once 'menu.php';
+
+// Include navigation menu and database connection
+require 'menu.php';
+require 'db.php';
+
+// Turn off foreign key checks so old data can be deleted safely
+$pdo->exec("Set foreign_key_checks = 0");
+
+// Delete guest analyses older than 1 day
+// Source along with embedded source: https://stackoverflow.com/questions/8544438/select-records-from-now-1-day
+$pdo->exec("Delete from analyses where id_user is null and created_at < now() - interval 1 day");
+
+// Turn foreign key checks back on
+$pdo->exec("Set foreign_key_checks = 1");
+
+// Show page title
 echo "<h2 class='section-title'>Search Page</h2>";
 
 ?>
 
+<!-- Use card class for visualisation -->
 <div class = "card">
-<h3>Select a Database :)</h3>
 
-<!-- Use Example Dataset -->
+<h3>Select a Database: </h3>
 
-<form id="example_form" method = "POST" action = "seq.php">
+<!-- Form to use the example dataset -->
 
+<form id="example_form" method="POST" action="seq.php">
+
+<!-- Hidden value to tell the system to load example data -->
 <input type="hidden" name="example_dataset" value="1">
 
+<!-- Button to start example dataset -->
 <button type="submit" class="login-card">
 Use Example Dataset (Glucose-6-Phosphatase Aves)
 </button>
@@ -23,11 +42,13 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
 
 <div style='height:40px'></div>
 
-<!-- Run Custom Search -->
+<!-- Form to run a custom analysis -->
 
 <form id="analysis_form" method="POST" action="seq.php" onsubmit="showLoading()">
 
 <div class="form-row">
+
+    <!-- Input for protein family -->
     <label for="protein">Protein family:</label>
 
     <input
@@ -38,6 +59,7 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
         required
     >
 
+    <!-- Suggested protein names. Datalist source: https://www.w3schools.com/tags/tag_datalist.asp  -->
     <datalist id="protein_list">
         <option value="glucose-6-phosphatase">
         <option value="cytochrome c">
@@ -46,10 +68,13 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
         <option value="kinase">
         <option value="ATP synthase">
     </datalist>
+
 </div>
 
 
 <div class="form-row">
+
+    <!-- Input for taxonomic group -->
     <label for="taxon">Taxonomic group:</label>
 
     <input
@@ -60,6 +85,7 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
         required
     >
 
+    <!-- Suggested taxonomic groups -->
     <datalist id="taxon_list">
         <option value="Aves">
         <option value="Mammalia">
@@ -68,26 +94,44 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
         <option value="Vertebrata">
         <option value="Reptilia">
     </datalist>
+
 </div>
+
+
 <div class="form-row">
+
+    <!-- Input for maximum number of sequences. For maximum sequences, by default set it to 25 to avoid heavy queries. -->
     <label for="seq_max">Maximum sequences:</label>
-    <input type="number" id="seq_max" name="seq_max" value="30">
+
+    <input
+        type="number"
+        id="seq_max"
+        name="seq_max"
+        value="25"
+    >
+
 </div>
+
 
 <h4>Quality filters (optional)</h4>
 
+<!-- Optional filter: remove partial sequences -->
 <label>
 <input type="checkbox" name="exclude_partial">
 Exclude partial sequences
 </label>
+
 <br>
 
+<!-- Optional filter: only manual curated sequences -->
 <label>
 <input type="checkbox" name="manual_only">
 Manual curated only
 </label>
+
 <br>
 
+<!-- Optional filter: remove fragments -->
 <label>
 <input type="checkbox" name="exclude_frag">
 Exclude fragments
@@ -95,14 +139,23 @@ Exclude fragments
 
 <br><br>
 
-<button type="submit" class="login-card">Run Analysis</button>
+<!-- Button to start analysis -->
+<button type="submit" class="login-card">
+Run Analysis
+</button>
 
 </form>
+
 <div style='height:40px'></div>
 
 </div>
+
+
+<!-- Area where results will be shown -->
 <div id="results"></div>
 
+
+<!-- Loading popup while analysis runs. Generated using ChatGPT -->
 <div id="loadingPopup" style="
     display:none;
     position:fixed;
@@ -128,32 +181,43 @@ Exclude fragments
         font-family:Arial;
     ">
 
+        <!-- Spinner animation -->
         <div class="spinner"></div>
 
-        <h2 id="progressText">Processing your request</h2>
+        <!-- Text that updates during processing -->
+        <h2 id="progressText">
+            Processing your request
+        </h2>
+
     </div>
 
 </div>
+
+
 <script>
 
+// Show loading popup when form is submitted. I thought of the idea but the implementation was generated using ChactGPT. 
 function showLoading() {
 
     document.getElementById("loadingPopup").style.display = "block";
 
-    // after 10 seconds
+    // After 20 seconds show patience message
     setTimeout(function() {
         var el = document.getElementById("progressText");
         if (el) {
-            el.innerText = "Thank you for your patience! This analysis is processing a large dataset.";
+            el.innerText = "Thank you for your patience!";
         }
     }, 20000);
 
+    // After 30 seconds show progress message
     setTimeout(function() {
         var el = document.getElementById("progressText");
         if (el) {
             el.innerText = "Almost there!";
         }
     }, 30000);
+
+    // After 50 seconds show final message
     setTimeout(function() {
         var el = document.getElementById("progressText");
         if (el) {
@@ -164,5 +228,6 @@ function showLoading() {
 }
 
 </script>
+
 </body>
 </html>

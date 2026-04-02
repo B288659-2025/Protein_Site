@@ -1,10 +1,13 @@
 <?php
+// Include navigation menu
 require 'menu.php';
 ?>
+
+<!--  Set page title -->
 <h2 class="section-title">Credits</h2>
 
+<!-- Use the container and card (for each info) class for visualisation -->
 <div class="container">
-
 
 <div class="card">
 
@@ -27,7 +30,6 @@ National Center for Biotechnology Information (NCBI) database.
 <li><a href="https://www.ebi.ac.uk/jdispatcher/msa/clustalo" target="_blank">Clustal Omega for multiple sequence alignment</a></li>
 <li><a href="https://prosite.expasy.org/" target="_blank">PROSITE database for motif scanning</a></li>
 <li><a href="https://www.ebi.ac.uk/jdispatcher/emboss" target="_blank">EMBOSS tools for sequence analysis</a></li>
-
 </ul>
 
 
@@ -43,7 +45,6 @@ National Center for Biotechnology Information (NCBI) database.
 <li><a href="https://www.ncbi.nlm.nih.gov/search/" target="_blank">HTML and CSS for user interface design</a></li>
 <li><a href="https://www.ncbi.nlm.nih.gov/search/" target="_blank">JavaScript for interactive feature</a></li>
 <li><a href="https://www.ncbi.nlm.nih.gov/search/" target="_blank">Linux command line environment</a></li>
-
 </ul>
 
 </div>

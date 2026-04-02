@@ -1,279 +1,232 @@
 <?php
 
-function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual_only,$exclude_frag)
+// Get protein sequences from NCBI using search filters
+function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual_only, $exclude_frag)
 {
+	// Build search query
+	$query = $protein . " AND (" . $taxon . ")";
 
-    $query = $protein . " AND (" . $taxon . ")";
+	// Remove partial sequences if selected
+	if ($exclude_partial) {
+		$query .= " NOT partial";
+	}
 
-    if ($exclude_partial) {
-       $query .= " NOT partial";
-    }
+	// Remove fragment sequences if selected
+	if ($exclude_frag) {
+		$query .= " NOT fragment";
+	}
 
-    if ($exclude_frag) {
-       $query .= " NOT fragment";
-    }
+	// Only include reviewed sequences if selected
+	if ($manual_only) {
+		$query .= " AND reviewed[filter]";
+	}
 
-    if ($manual_only) {
-       $query .= " AND reviewed[filter]";
-    }
+	// Encode query for URL
+	$term = urlencode($query);
 
-    $term = urlencode($query);
+	// Step 1: search for sequence IDs
+	// Source: https://www.ncbi.nlm.nih.gov/books/NBK25499/#chapter4.Introduction
+	$search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=protein&term={$term}&retmax={$maxseq}&retmode=json&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
+	$search_json = file_get_contents($search_url);
+	// JSON is requested from the NCBI API using retmode=json and parsed using json_decode
+	$data = json_decode($search_json, true);
 
-    // Step 1: search for IDs
-    $search_url =
-       "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi".
-       "?db=protein&term={$term}&retmax={$maxseq}&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
+	// Stop if no IDs found
+	if (!$data || !isset($data['esearchresult']['idlist'])) {
+    		return "";
+	}
 
-    $search_xml = file_get_contents($search_url);
-    if(!$search_xml) {
-        return "";
-    }
+	// Collect IDs into array
+	$ids = $data['esearchresult']['idlist'];
 
-    $xml = simplexml_load_string($search_xml);
-    if(!$xml || !isset($xml->IdList->Id)) {
-        return "";
-    }
+	// Stop if ID list is empty
+	if (empty($ids)) {
+		return "";
+	}
 
-    // Collect IDs
-    $ids = [];
-    foreach($xml->IdList->Id as $id) {
-        $ids[] = (string)$id;
-    }
+	// Convert IDs into comma separated string
+	$id_string = implode(",", $ids);
 
-    if(empty($ids)) {
-        return "";
-    }
+	// Step 2: fetch FASTA sequences
+	$fetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=protein&id={$id_string}&rettype=fasta&retmode=text&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
 
-    $id_string = implode(",", $ids);
+	$fasta = file_get_contents($fetch_url);
 
-    // Step 2: fetch FASTA sequences
-    $fetch_url =
-        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi".
-        "?db=protein&id={$id_string}&rettype=fasta&retmode=text&api_key=d41e452731cb27ccab32c0651c40b7dc5a08";
-
-    $fasta = file_get_contents($fetch_url);
-
-    return $fasta ? $fasta : "";
+	// Return FASTA data
+	return $fasta ? $fasta : "";
 }
 
+
+// Run multiple sequence alignment using Clustal Omega
 function run_alignment($fasta)
 {
-    file_put_contents("/tmp/sequences.fasta", $fasta);
+	// Save sequences to temporary file
+	file_put_contents("/tmp/sequences.fasta", $fasta);
 
-    $cmd = "clustalo -i /tmp/sequences.fasta -o /tmp/alignment.aln --force";
-    shell_exec($cmd);
+	// Run alignment command
+	$cmd = "clustalo -i /tmp/sequences.fasta -o /tmp/alignment.fasta --force";
+	shell_exec($cmd);
 
-    if(file_exists("/tmp/alignment.aln"))
-    {
-        return file_get_contents("/tmp/alignment.aln");
-    }
+	// Return alignment if file exists
+	if (file_exists("/tmp/alignment.fasta"))
+	{
+		return file_get_contents("/tmp/alignment.fasta");
+	}
 
-    return "";
+	return "";
 }
 
+
+// Run motif scan using EMBOSS patmatmotifs
 function run_motifs($fasta)
 {
-    file_put_contents("/tmp/sequences.fasta", $fasta);
+	// Save sequences to temporary file
+	file_put_contents("/tmp/sequences.fasta", $fasta);
 
-    $cmd = "patmatmotifs -sequence /tmp/sequences.fasta -outfile /tmp/motifs.txt -auto";
-    shell_exec($cmd);
+	// Run motif search command
+	$cmd = "patmatmotifs -sequence /tmp/sequences.fasta -outfile /tmp/motifs.txt -auto";
+	shell_exec($cmd);
 
-    if(file_exists("/tmp/motifs.txt"))
-    {
-        return file_get_contents("/tmp/motifs.txt");
-    }
+	// Return motif results if file exists
+	if (file_exists("/tmp/motifs.txt"))
+	{
+		return file_get_contents("/tmp/motifs.txt");
+	}
 
-    return "";
+	return "";
 }
 
+
+// Generate sequence length distribution plot
 function generate_length_plot($fasta, $id)
 {
-//    $fasta_file = "/tmp/sequences.fasta";
-//    $plot_file = "/tmp/length_plot_$id_analysis.png";
-    $fasta_file = "/tmp/sequences_" . $id . ".fasta";
-    $plot_file  = "/tmp/length_plot_" . $id . ".png";
-    file_put_contents($fasta_file, $fasta);
+	$fasta_file = "/tmp/sequences_" . $id . ".fasta";
+	$plot_file  = "/tmp/length_plot_" . $id . ".png";
 
-    $cmd = "/usr/bin/python3 /localdisk/home/s2794196/public_html/protein_site/plot_lengths.py $fasta_file $plot_file 2>&1";
-    shell_exec($cmd);
+	// Save FASTA file
+	file_put_contents($fasta_file, $fasta);
 
+	// Run Python plotting script
+	$cmd = "/usr/bin/python3 /localdisk/home/s2794196/public_html/protein_site/plot_lengths.py $fasta_file $plot_file";
+	shell_exec($cmd);
 
-    return $plot_file;
+	return $plot_file;
 }
 
+
+// Generate conservation plot from alignment
 function generate_conservation_plot($alignment, $id)
 {
-    $aln_file = "/tmp/alignment_" . $id . ".fasta";
-    $plot_file = "/tmp/conservation_plot_" . $id . ".png";
+	$aln_file = "/tmp/alignment_" . $id . ".fasta";
+	$plot_file = "/tmp/conservation_plot_" . $id . ".png";
 
-    file_put_contents($aln_file, $alignment);
+	file_put_contents($aln_file, $alignment);
 
-    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_conservation.py $aln_file $plot_file";
-    shell_exec($cmd);
+	$cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_conservation.py $aln_file $plot_file";
+	shell_exec($cmd);
 
-    return $plot_file;
+	return $plot_file;
 }
 
+
+// Generate amino acid composition plot
 function generate_aa_composition_plot($fasta, $id)
 {
-    $fasta_file = "/tmp/sequences_" . $id . ".fasta";
-    $plot_file = "/tmp/aa_comp_" . $id . ".png";
+	$fasta_file = "/tmp/sequences_" . $id . ".fasta";
+	$plot_file = "/tmp/aa_comp_" . $id . ".png";
 
-    file_put_contents($fasta_file, $fasta);
+	file_put_contents($fasta_file, $fasta);
 
-    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_aa_comp.py $fasta_file $plot_file";
-    shell_exec($cmd);
+	$cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_aa_comp.py $fasta_file $plot_file";
+	shell_exec($cmd);
 
-    return $plot_file;
+	return $plot_file;
 }
 
+
+// Generate heatmap plot from alignment
 function generate_heatmap_plot($alignment, $id)
 {
-    $aln_file = "/tmp/alignment_" . $id . ".fasta";
-    $plot_file = "/tmp/heatmap_" . $id . ".png";
+	$aln_file = "/tmp/alignment_" . $id . ".fasta";
+	$plot_file = "/tmp/heatmap_" . $id . ".png";
 
-    file_put_contents($aln_file, $alignment);
+	file_put_contents($aln_file, $alignment);
 
-    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_heatmap.py $aln_file $plot_file";
-    shell_exec($cmd);
+	$cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_heatmap.py $aln_file $plot_file";
+	shell_exec($cmd);
 
-    return $plot_file;
+	return $plot_file;
 }
+
+
+// Generate conserved regions plot
 function generate_conserved_regions_plot($alignment, $id)
 {
-    $aln_file = "/tmp/alignment_" . $id . ".fasta";
-    $plot_file = "/tmp/conserved_regions_" . $id . ".png";
+	$aln_file = "/tmp/alignment_" . $id . ".fasta";
+	$plot_file = "/tmp/conserved_regions_" . $id . ".png";
 
-    file_put_contents($aln_file, $alignment);
+	file_put_contents($aln_file, $alignment);
 
-    $cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_conserved_regions.py $aln_file $plot_file";
-    shell_exec($cmd);
+	$cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/plot_conserved_regions.py $aln_file $plot_file";
+	shell_exec($cmd);
 
-    return $plot_file;
+	return $plot_file;
 }
 
+
+// Generate statistics using Python and Biopython
 function get_statistics($fasta)
 {
-    $fasta_file = "/tmp/stats.fasta";
+	$fasta_file = "/tmp/stats.fasta";
 
-    file_put_contents($fasta_file, $fasta);
+	file_put_contents($fasta_file, $fasta);
 
-    $cmd =
-        "python3 /localdisk/home/s2794196/public_html/protein_site/stats_biopython.py "
-        . $fasta_file;
+	// Run statistics script
+	$cmd = "python3 /localdisk/home/s2794196/public_html/protein_site/stats_biopython.py " . $fasta_file;
 
-    return shell_exec($cmd);
+	return shell_exec($cmd);
 }
 
-function save_analysis(
-    $pdo,
-    $protein,
-    $taxon,
-    $maxseq,
-    $sequences,
-    $alignment,
-    $motifs,
-    $exclude_partial,
-    $manual_only,
-    $exclude_frag
-)
+
+// Save analysis results into database
+function save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $alignment, $motifs, $exclude_partial, $manual_only, $exclude_frag)
 {
-    // Get logged in user
-    $id_user = $_SESSION["id_user"] ?? null;
-    $session_id = session_id();
+	// Get logged in user and session id
+	$id_user = $_SESSION["id_user"] ?? null;
+	$session_id = session_id();
 
-    $stmt = $pdo->prepare("
-        INSERT INTO analyses
-        (
-            name,
-            protein,
-            taxon,
-            seq_max,
-            id_user,
-            session_id,
-            exclude_partial,
-            manual_only,
-            exclude_frag
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+	// Insert analysis record
+	$stmt = $pdo->prepare("Insert into analyses (name, protein, taxon, seq_max, id_user, session_id, exclude_partial, manual_only, exclude_frag) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	$stmt->execute(["User Dataset", $protein, $taxon, $maxseq, $id_user, $session_id, $exclude_partial, $manual_only, $exclude_frag]);
 
-    $stmt->execute([
-        "User Dataset",
-        $protein,
-        $taxon,
-        $maxseq,
-        $id_user,
-	$session_id,
-        $exclude_partial,
-        $manual_only,
-        $exclude_frag
-    ]);
+	// Get new analysis id
+	$id_analysis = $pdo->lastInsertId();
 
-    $id_analysis = $pdo->lastInsertId();
+	// Save sequences
+	$stmt = $pdo->prepare("Insert into sequences (id_analysis, fasta_data) values (?, ?)");
+	$stmt->execute([$id_analysis, $sequences]);
 
+	// Save alignment
+	$stmt = $pdo->prepare("Insert into alignments (id_analysis, alignment_data) values (?, ?)");
+	$stmt->execute([$id_analysis, $alignment]);
 
-    $stmt = $pdo->prepare("
-        INSERT INTO sequences
-        (id_analysis, fasta_data)
-        VALUES (?, ?)
-    ");
+	// Save motifs
+	$stmt = $pdo->prepare("Insert into motifs (id_analysis, motif_data) values (?, ?)");
+	$stmt->execute([$id_analysis, $motifs]);
 
-    $stmt->execute([
-        $id_analysis,
-        $sequences
-    ]);
-
-
-    $stmt = $pdo->prepare("
-        INSERT INTO alignments
-        (id_analysis, alignment_data)
-        VALUES (?, ?)
-    ");
-
-    $stmt->execute([
-        $id_analysis,
-        $alignment
-    ]);
-
-
-    $stmt = $pdo->prepare("
-        INSERT INTO motifs
-        (id_analysis, motif_data)
-        VALUES (?, ?)
-    ");
-
-    $stmt->execute([
-        $id_analysis,
-        $motifs
-    ]);
-
-    return $id_analysis;
+	return $id_analysis;
 }
-function search_exists($pdo, $protein, $taxon, $seq_max,
-                       $exclude_partial, $manual_only, $exclude_frag)
+
+
+// Check if a search already exists
+function search_exists($pdo, $protein, $taxon, $seq_max, $exclude_partial, $manual_only, $exclude_frag)
 {
-    $stmt = $pdo->prepare("
-        SELECT 1
-        FROM analyses
-        WHERE protein = ?
-        AND taxon = ?
-        AND seq_max = ?
-        AND exclude_partial = ?
-        AND manual_only = ?
-        AND exclude_frag = ?
-        LIMIT 1
-    ");
+	// Look for matching analysis
+	$stmt = $pdo->prepare("Select 1 from analyses where protein = ? and taxon = ? and seq_max = ? and exclude_partial = ? and manual_only = ? and exclude_frag = ? limit 1");
 
-    $stmt->execute([
-        $protein,
-        $taxon,
-        $seq_max,
-        $exclude_partial,
-        $manual_only,
-        $exclude_frag
-    ]);
+	$stmt->execute([$protein, $taxon, $seq_max, $exclude_partial, $manual_only, $exclude_frag]);
 
-    return $stmt->fetchColumn();
+	return $stmt->fetchColumn();
 }
+
 ?>

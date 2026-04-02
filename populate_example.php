@@ -2,53 +2,36 @@
 
 require_once 'db.php';
 
-/* read the files */
-
+// Read the contents from the example files which are saved to reduce the need for search and retrieval
 $fasta = file_get_contents("example_sequences.fasta");
 $alignment = file_get_contents("example_alignment.fasta");
 $motifs = file_get_contents("example_motifs.txt");
 
-/* insert analysis */
 
-$stmt = $pdo->prepare("
-INSERT INTO analyses (name, protein, taxon, seq_max)
-VALUES (?, ?, ?, ?)
-");
+// Prepare the PDO query to insert data into analyses table
+$stmt = $pdo->prepare("Insert into analyses (name, protein, taxon, seq_max) values (?, ?, ?, ?)");
 
-$stmt->execute([
-    "Example Dataset",
-    "glucose-6-phosphatase",
-    "Aves",
-    30
-]);
-
+// Pass the values and execute the query 
+$stmt->execute(["Example Dataset", "glucose-6-phosphatase", "Aves", 30]);
+// Get the ID of the most recent insert to use in other tables due to foreign key constraints
 $id_analysis = $pdo->lastInsertId();
 
-/* insert sequences */
+// Prepare the PDO query to insert data into sequences table
+$stmt = $pdo->prepare("Insert into sequences (id_analysis, fasta_data) values (?, ?)");
 
-$stmt = $pdo->prepare("
-INSERT INTO sequences (id_analysis, fasta_data)
-VALUES (?, ?)
-");
-
+// Pass the values and execute the query
 $stmt->execute([$id_analysis, $fasta]);
 
-/* insert alignment */
+// Prepare the PDO query to insert data into alignments table
+$stmt = $pdo->prepare("Insert into alignments (id_analysis, alignment_data) values (?, ?)");
 
-$stmt = $pdo->prepare("
-INSERT INTO alignments (id_analysis, alignment_data)
-VALUES (?, ?)
-");
-
+// Pass the values and execute the query
 $stmt->execute([$id_analysis, $alignment]);
 
-/* insert motifs */
+// Prepare the PDO query to insert data into motifs table
+$stmt = $pdo->prepare("Insert into motifs (id_analysis, motif_data) values (?, ?)");
 
-$stmt = $pdo->prepare("
-INSERT INTO motifs (id_analysis, motif_data)
-VALUES (?, ?)
-");
-
+// Pass the values and execute the query
 $stmt->execute([$id_analysis, $motifs]);
 
 

@@ -1,8 +1,11 @@
 <?php
+// Include navigation menu
 require 'menu.php';
 ?>
+<!-- Set page title -->
 <h2 class="section-title">Read More</h2>
 
+<!-- Use the container, dataset-grid, and card (for each info) classes to improve visualisation -->
 <div class="container">
 <div class = "dataset-grid">
 <div class="card">
@@ -14,6 +17,7 @@ The National Center for Biotechnology Information (NCBI) provides access to many
 Users can search for protein information, download sequences, and explore scientific data.
 </p>
 
+<!-- Provide a linkout to an external site -->
 <a href="https://www.ncbi.nlm.nih.gov/protein" target="_blank">
 Visit NCBI Protein Database
 </a>

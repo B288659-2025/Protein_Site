@@ -1,60 +1,88 @@
 <?php
+
+// Include navigation menu
 require 'menu.php';
+
+// Include database connection because we are inserting data into the database
+require 'db.php';
+
+// Set section title
 echo "<h2 class='section-title'>Contact us</h2>";
+
+
+// This variable tracks whether the form has been submitted
+// It starts as false so the form is shown initially
 $submitted = false;
 
+
+// Check if the form was submitted using POST
+// This prevents the code from running when the page first loads
+// It only runs after the user clicks the submit button
 if ($_SERVER["REQUEST_METHOD"] === "POST")
 {
-    $submitted = true;
+	// Set the variable to true to mark that the form has been submitted
+	$submitted = true;
 
-    $name = $_POST['name'] ?? null;
-    $email = $_POST['email'] ?? null;
-    $message = $_POST['message'];
+	// Get user input safely
+	// If name or email is empty, set them to null since they can anonymously send suggestions
+	$name = $_POST['name'] ?? null;
+	$email = $_POST['email'] ?? null;
 
-    $stmt = $pdo->prepare("
-        INSERT INTO contact_messages (name, email, message)
-        VALUES (?, ?, ?)
-    ");
+	// Message is required, so we take it directly
+	$message = $_POST['message'];
 
-    $stmt->execute([$name, $email, $message]);
+	// Prepare SQL statement to insert the message into the database
+	$stmt = $pdo->prepare("insert into contact_messages (name, email, message) values (?, ?, ?)");
+
+	// Execute the query with the provided data
+	$stmt->execute([$name, $email, $message]);
 }
+
 ?>
 
+<!-- Use the container and card classes for content organization -->
 <div class="container">
 
-    <div class="card">
+	<div class="card">
 
-<?php if ($submitted): ?>
+		<?php if ($submitted): ?>
 
-    <p class="info-text">
-    Thank you for your message. Your feedback has been received.
-    </p>
+			<!-- Show confirmation message after submission -->
 
-<?php else: ?>
+			<p class="info-text">
+				Thank you for your message! Your feedback has been received.
+			</p>
 
-    <p>
-    Feel free to send us a question or leave us a suggestion for how we can
-    improve our services.
-    </p>
+		<?php else: ?>
 
-    <form method="POST" action="contact.php">
+			<!-- Show instructions -->
 
-        Name (optional):<br>
-        <input type="text" name="name"><br><br>
+			<p>
+				Feel free to send us a question or leave us a suggestion for how we can improve our services.
+			</p>
 
-        Email (optional):<br>
-        <input type="email" name="email"><br><br>
-        Message:<br>
-        <textarea name="message" rows="6" required></textarea><br><br>
 
-        <button type="submit" class="login-card">
-            Send Message
-        </button>
+			<!-- Contact form -->
 
-    </form>
+			<form method="POST" action="contact.php">
 
-<?php endif; ?>
+				Name (optional):<br>
+				<input type="text" name="name"><br><br>
 
-</div>
+				Email (optional):<br>
+				<input type="email" name="email"><br><br>
+
+				Message:<br>
+				<textarea name="message" rows="6" required></textarea><br><br>
+
+				<button type="submit" class="login-card">
+					Send Message
+				</button>
+
+			</form>
+
+		<?php endif; ?>
+
+	</div>
 
 </div>
