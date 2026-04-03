@@ -252,6 +252,7 @@ AI tools were used during development to help with problem solving and debugging
 
 <li>explain how to display an image on the webpage</li>
 
+<li>suggest solutions for orientation issues in display in styles.php</li>
 
 </ul>
 </li>
