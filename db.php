@@ -1,6 +1,6 @@
 <?php
 
-// Set the PDO connection to the database - will be reset for submission
+// Set the PDO connection to the database 
 $pdo = new PDO(
     "mysql:host=127.0.0.1;dbname=s2794196_website",
     "s2794196",
