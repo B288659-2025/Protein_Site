@@ -58,44 +58,73 @@ function get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual
 
 
 // Run multiple sequence alignment using Clustal Omega
-function run_alignment($fasta)
+function run_alignment($fasta, $id)
 {
+	// Define file paths
+	$input_file = "/tmp/sequences_" . $id . ".fasta";
+	$output_file = "/tmp/alignment_" . $id . ".fasta";
+
 	// Save sequences to temporary file
-	file_put_contents("/tmp/sequences.fasta", $fasta);
+	file_put_contents($input_file, $fasta);
+
+	// Log input file check
+	error_log("Input file: " . $input_file);
+	error_log("Input exists: " . (file_exists($input_file) ? "yes" : "no"));
+	error_log("Input size: " . filesize($input_file));
 
 	// Run alignment command
-	$cmd = "clustalo -i /tmp/sequences.fasta -o /tmp/alignment.fasta --force";
-	shell_exec($cmd);
+	$cmd = "clustalo -i $input_file -o $output_file --force 2>&1";
 
-	// Return alignment if file exists
-	if (file_exists("/tmp/alignment.fasta"))
+	$output = shell_exec($cmd);
+
+	// Log command and result
+	error_log("Command run: " . $cmd);
+	error_log("Command output: " . $output);
+
+	// Check output file
+	error_log("Output file: " . $output_file);
+	error_log("Output exists: " . (file_exists($output_file) ? "yes" : "no"));
+
+	if (file_exists($output_file))
 	{
-		return file_get_contents("/tmp/alignment.fasta");
+		error_log("Output size: " . filesize($output_file));
+
+		$alignment = file_get_contents($output_file);
+
+		if (trim($alignment) == "")
+		{
+			error_log("Alignment file is empty");
+		}
+		else
+		{
+			error_log("Alignment generated successfully");
+		}
+
+		return $alignment;
 	}
+
+	error_log("Alignment file was not created");
 
 	return "";
 }
-
-
 // Run motif scan using EMBOSS patmatmotifs
-function run_motifs($fasta)
+function run_motifs($fasta, $id)
 {
 	// Save sequences to temporary file
-	file_put_contents("/tmp/sequences.fasta", $fasta);
+	file_put_contents("/tmp/sequences_" . $id . ".fasta", $fasta);
 
 	// Run motif search command
-	$cmd = "patmatmotifs -sequence /tmp/sequences.fasta -outfile /tmp/motifs.txt -auto";
+	$cmd = "patmatmotifs -sequence /tmp/sequences_" . $id . ".fasta -outfile /tmp/motifs_" . $id . ".txt -auto";
 	shell_exec($cmd);
 
 	// Return motif results if file exists
-	if (file_exists("/tmp/motifs.txt"))
+	if (file_exists("/tmp/motifs_" . $id . ".txt"))
 	{
-		return file_get_contents("/tmp/motifs.txt");
+		return file_get_contents("/tmp/motifs_" . $id . ".txt");
 	}
 
 	return "";
 }
-
 
 // Generate sequence length distribution plot
 function generate_length_plot($fasta, $id)
@@ -189,7 +218,7 @@ function get_statistics($fasta)
 
 
 // Save analysis results into database
-function save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $alignment, $motifs, $exclude_partial, $manual_only, $exclude_frag)
+function save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $exclude_partial, $manual_only, $exclude_frag)
 {
 	// Get logged in user and session id
 	$id_user = $_SESSION["id_user"] ?? null;
@@ -205,14 +234,6 @@ function save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $alignment, 
 	// Save sequences
 	$stmt = $pdo->prepare("Insert into sequences (id_analysis, fasta_data) values (?, ?)");
 	$stmt->execute([$id_analysis, $sequences]);
-
-	// Save alignment
-	$stmt = $pdo->prepare("Insert into alignments (id_analysis, alignment_data) values (?, ?)");
-	$stmt->execute([$id_analysis, $alignment]);
-
-	// Save motifs
-	$stmt = $pdo->prepare("Insert into motifs (id_analysis, motif_data) values (?, ?)");
-	$stmt->execute([$id_analysis, $motifs]);
 
 	return $id_analysis;
 }

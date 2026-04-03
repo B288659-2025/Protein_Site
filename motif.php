@@ -38,7 +38,7 @@ function display_motifs($text)
 	if (!$text)
 	{
 		echo "<p class='info-text'>";
-		echo "No motif results found.";
+		echo "No motif results found :(";
 		echo "</p>";
 		echo "</div>";
 		exit;
@@ -67,11 +67,46 @@ function display_motifs($text)
 		}
 
 		// Extract motif name
-		if (preg_match("/Motif\s*=\s*(\S+)/", $line, $m))
-		{
-			$motif = $m[1];
-		}
+	// Extract motif name AND print row when record is complete
+	if (preg_match("/Motif\s*=\s*(\S+)/", $line, $m))
+	{
+		$motif = $m[1];
 
+		// Now we have a complete record
+		if ($sequence != "" && $start != "" && $end != "" && $length != "")
+		{
+			// Create table header once
+			if (!$found)
+			{
+				echo "<div class='card'>";
+				echo "<table class='motif-table'>";
+				echo "<tr>
+						<th>Sequence</th>
+						<th>Motif</th>
+						<th>Start</th>
+						<th>End</th>
+						<th>Length</th>
+					  </tr>";
+
+				$found = true;
+			}
+
+			// Print motif row
+			echo "<tr>
+					<td>$sequence</td>
+					<td>$motif</td>
+					<td>$start</td>
+					<td>$end</td>
+					<td>$length</td>
+				  </tr>";
+
+			// Reset values for next motif
+			$motif = "";
+			$start = "";
+			$end = "";
+			$length = "";
+		}
+	}
 		// Extract motif length
 		if (preg_match("/Length\s*=\s*(\d+)/", $line, $m))
 		{
@@ -89,41 +124,6 @@ function display_motifs($text)
 		{
 			$end = $m[1];
 
-			// If complete motif data is found
-			if ($sequence != "" && $start != "" && $end != "")
-			{
-				// Create table header once
-				if (!$found)
-				{
-					// Use the card and motif-table classes for visualisation
-					echo "<div class='card'>";
-					echo "<table class='motif-table'>";
-					echo "<tr>
-							<th>Sequence</th>
-							<th>Motif</th>
-							<th>Start</th>
-							<th>End</th>
-							<th>Length</th>
-						  </tr>";
-
-					$found = true;
-				}
-
-				// Print motif row
-				echo "<tr>
-						<td>$sequence</td>
-						<td>$motif</td>
-						<td>$start</td>
-						<td>$end</td>
-						<td>$length</td>
-					  </tr>";
-
-				// Reset values for next motif
-				$motif = "";
-				$start = "";
-				$end = "";
-				$length = "";
-			}
 		}
 	}
 
@@ -137,7 +137,7 @@ function display_motifs($text)
 	else
 	{
 		echo "<p class='info-text'>";
-		echo "No motif results found.";
+		echo "No motif results found :(";
 		echo "</p>";
 		echo "</div>";
 	}

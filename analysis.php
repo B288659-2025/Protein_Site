@@ -16,14 +16,7 @@ echo "<h2 class='section-title'>Additional Analysis</h2>";
 // Store all analysis types in session
 if (isset($_POST['display_all']))
 {
-	$_SESSION['generated_analyses'] = [
-		'stats',
-		'length_plot',
-		'residue_conserve',
-		'aa_comp',
-		'heatmap',
-		'cons'
-	];
+	$_SESSION['generated_analyses'] = ['stats','length_plot','residue_conserve','aa_comp','heatmap','cons'];
 }
 
 // If user selected specific analyses
@@ -60,7 +53,6 @@ if(!isset($_SESSION['id_analysis']))
 // Get current analysis id
 $id = $_SESSION['id_analysis'];
 
-
 // Get sequences from database
 $stmt = $pdo->prepare("select fasta_data from sequences where id_analysis = ?");
 
@@ -68,6 +60,19 @@ $stmt->execute([$id]);
 
 $sequences = $stmt->fetchColumn();
 
+// Count number of sequences in FASTA data
+$sequence_count = substr_count($sequences, ">");
+
+// If fewer than 2 sequences, show message and stop page
+if ($sequence_count < 2)
+{
+        echo "<div class='container'>";
+        echo "<p class='info-text'>";
+        echo "Additional analyses require at least 2 sequences.";
+        echo "</p>";
+        echo "</div>";
+        exit;
+}
 
 // Safety check to ensure session variable exists
 if(!isset($_SESSION['generated_analyses']))

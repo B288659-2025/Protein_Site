@@ -1,18 +1,19 @@
 <?php
 
-// Start the session if it has not already been started
 if (session_status() === PHP_SESSION_NONE)
 {
 	session_start();
 }
 
-// Include database connection because we are retrieving data from the database
 require_once "db.php";
 
+// Update dataset id based on user selection
+if (isset($_POST['analysis_id']))
+{
+	$_SESSION['id_analysis'] = $_POST['analysis_id'];
+}
 
-// Get the current dataset id from the session
 $id = $_SESSION['id_analysis'] ?? null;
-
 
 // Stop if no dataset has been selected
 if (!$id)
@@ -48,7 +49,7 @@ if (isset($_POST['export_sequences']))
 	// Get selected file format, default is FASTA
 	$format = $_POST['sequences_format'] ?? "fasta";
 
-	$stmt = $pdo->prepare("SELECT fasta_data FROM sequences WHERE id_analysis = ?");
+	$stmt = $pdo->prepare("select fasta_data from sequences where id_analysis = ?");
 	$stmt->execute([$id]);
 
 	$sequences = $stmt->fetchColumn();
@@ -77,8 +78,7 @@ if (isset($_POST['export_alignment']))
 	// Get selected format, default is FASTA
 	$format = $_POST['alignment_format'] ?? "fasta";
 
-	$source_file = "/tmp/alignment.fasta";
-
+	$source_file = "/tmp/alignment_" . $id . ".fasta";
 	if (!file_exists($source_file))
 	{
 		echo "Alignment file not found";
@@ -103,8 +103,7 @@ if (isset($_POST['export_motif_report']))
 {
 	$something_selected = true;
 
-	$file = "/tmp/motifs.txt";
-
+	$file = "/tmp/motifs_" . $id . ".txt";
 	if (file_exists($file))
 	{
 		copy($file, $tmp_dir . "/motif_report.txt");

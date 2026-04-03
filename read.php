@@ -14,7 +14,7 @@ require 'menu.php';
 
 <p>
 The National Center for Biotechnology Information (NCBI) provides access to many biological databases, including protein and nucleotide sequences. 
-Users can search for protein information, download sequences, and explore scientific data.
+Users can search for protein information, download sequences, and explore the data through running additional analyses.
 </p>
 
 <!-- Provide a linkout to an external site -->
@@ -30,10 +30,10 @@ Visit NCBI Protein Database
 <h3>Multiple Sequence Alignment</h3>
 
 <p>
-Multiple sequence alignment is a method used to compare several biological sequences to find similarities, conserved regions, and evolutionary relationships between proteins.
+Multiple sequence alignment (MSA) is a method used to compare several biological sequences to find similarities, conserved regions, and evolutionary relationships between proteins.
 </p>
 
-<a href="https://www.ebi.ac.uk/Tools/msa/" target="_blank">
+<a href="https://www.geneious.com/guides/understanding-sequence-alignment" target="_blank">
 Learn More About Sequence Alignment
 </a>
 
@@ -45,11 +45,11 @@ Learn More About Sequence Alignment
 <h3>Protein Motifs</h3>
 
 <p>
-Protein motifs are short conserved patterns found within protein sequences that are linked to specific biological functions. 
+Protein motifs are short conserved patterns found in protein sequences that are linked to specific biological functions. 
 Motif scanning is used to identify these important functional regions in proteins.
 </p>
 
-<a href="https://prosite.expasy.org/" target="_blank">
+<a href="https://www.sciencedirect.com/science/article/pii/S0959440X96800571?via%3Dihub" target="_blank">
 Learn More About Protein Motifs
 </a>
 
@@ -61,12 +61,11 @@ Learn More About Protein Motifs
 <h3>Clustal Omega</h3>
 
 <p>
-Clustal Omega is a commonly used tool for performing multiple sequence alignment. 
-It compares protein sequences to find similarities, conserved regions, and evolutionary relationships. 
+Clustal Omega is a commonly used tool for performing MSA. 
 In this system, sequence alignment helps users understand how proteins are related and where important functional regions are located.
 </p>
 
-<a href="https://www.ebi.ac.uk/Tools/msa/clustalo/" target="_blank">
+<a href="https://onlinelibrary.wiley.com/doi/10.1002/pro.3290" target="_blank">
 Learn More About Clustal Omega
 </a>
 

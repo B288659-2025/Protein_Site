@@ -1,5 +1,4 @@
 <?php
-
 require_once 'db.php';
 
 // Read the contents from the example files which are saved to reduce the need for search and retrieval

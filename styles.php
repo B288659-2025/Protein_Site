@@ -1,4 +1,3 @@
-
 <style>
 
 /* Source: https://www.w3schools.com/css/default.asp */
@@ -275,6 +274,10 @@ html, body {
 
 
 /* tables and text */
+
+textarea {
+    resize: none;
+}
 
 .info-text {
     text-align: center;

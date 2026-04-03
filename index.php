@@ -6,16 +6,6 @@ session_start();
 require 'menu.php';
 require 'db.php';
 
-// Turn off foreign key checks so old data can be deleted safely
-$pdo->exec("Set foreign_key_checks = 0");
-
-// Delete guest analyses older than 1 day
-// Source along with embedded source: https://stackoverflow.com/questions/8544438/select-records-from-now-1-day
-$pdo->exec("Delete from analyses where id_user is null and created_at < now() - interval 1 day");
-
-// Turn foreign key checks back on
-$pdo->exec("Set foreign_key_checks = 1");
-
 // Show page title
 echo "<h2 class='section-title'>Search Page</h2>";
 
@@ -67,6 +57,9 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
         <option value="insulin">
         <option value="kinase">
         <option value="ATP synthase">
+        <option value="ABC transporter">
+        <option value="adenylyl cyclase">
+
     </datalist>
 
 </div>
@@ -100,14 +93,16 @@ Use Example Dataset (Glucose-6-Phosphatase Aves)
 
 <div class="form-row">
 
-    <!-- Input for maximum number of sequences. For maximum sequences, by default set it to 25 to avoid heavy queries. -->
-    <label for="seq_max">Maximum sequences:</label>
+    <!-- Input for maximum number of sequences. For maximum sequences, by default set it to 25 to avoid heavy queries. Maximum number of sequences is set to 50, again, to avoid very heavy queries. -->
+    <label for="seq_max">Sequences:</label>
 
     <input
         type="number"
         id="seq_max"
         name="seq_max"
         value="25"
+	min = "1"
+	max="50"
     >
 
 </div>

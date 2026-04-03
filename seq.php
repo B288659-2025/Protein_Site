@@ -12,34 +12,29 @@ if (isset($_POST['id_analysis'])) {
 // Load database and required functions
 require_once 'db.php';
 require_once 'analysis_functions.php';
-// Include navigation menu
-require_once "menu.php";
 
 
 // If example dataset button was used
 if (isset($_POST['example_dataset']))
 {
-	// Look for example dataset in database
-	$stmt = $pdo->prepare("Select id_analysis from analyses where protein = ? limit 1");
-	$stmt->execute(['Glucose-6-Phosphatase']);
+	//Look for existing example dataset
+	$stmt = $pdo->prepare("select id_analysis from analyses where name = 'Example Dataset' order by id_analysis desc limit 1");
+	$stmt->execute();
 	$example_id = $stmt->fetchColumn();
 
 	// If example dataset not found, create it
 	if (!$example_id)
 	{
-		require_once 'populate_example.php';
+	        require_once 'populate_example.php';
 
-		// Try again after populating
-		$stmt = $pdo->prepare("Select id_analysis from analyses where protein = ? limit 1");
-		$stmt->execute(['Glucose-6-Phosphatase']);
-		$example_id = $stmt->fetchColumn();
+	// Get the id of the newly inserted dataset
+	$example_id = $pdo->lastInsertId();
 	}
 
 	// Store example dataset id
 	$_SESSION['id_analysis'] = $example_id;
 	$_SESSION['generated_analyses'] = [];
 }
-
 
 // If user submitted a search
 if (isset($_POST['protein']) && isset($_POST['taxon']))
@@ -56,8 +51,9 @@ if (isset($_POST['protein']) && isset($_POST['taxon']))
 	$exclude_frag    = isset($_POST['exclude_frag']) ? 1 : 0;
 
 	// Check if this search already exists
-	$stmt = $pdo->prepare("Select id_analysis from analyses where protein = ? and taxon = ? and seq_max = ? and id_user = ? and exclude_partial = ? and manual_only = ? and exclude_frag = ? limit 1");
-	$stmt->execute([$protein, $taxon, $maxseq, $id_user, $exclude_partial, $manual_only, $exclude_frag]);
+	$session_id = session_id(); // Get session id for guest users
+	$stmt = $pdo->prepare("Select id_analysis from analyses where protein = ? and taxon = ? and seq_max = ? and ((id_user = ?) or (id_user is null and session_id = ?)) and exclude_partial = ? and manual_only = ? and exclude_frag = ? order by created_at desc limit 1");
+	$stmt->execute([$protein, $taxon, $maxseq, $id_user, $session_id, $exclude_partial, $manual_only, $exclude_frag]);
 	$existing_id = $stmt->fetchColumn();
 
 	// If search exists, redirect to sequences page
@@ -68,22 +64,25 @@ if (isset($_POST['protein']) && isset($_POST['taxon']))
 		header("Location: seq.php");
 		exit;
 	}
+	// Include navigation menu
+	require_once "menu.php";
 
 	// Get sequences from NCBI
-	$sequences = get_sequences_ncbi($protein, $taxon, $maxseq, $id_user, $exclude_partial, $manual_only, $exclude_frag);
+	$sequences = get_sequences_ncbi($protein, $taxon, $maxseq, $exclude_partial, $manual_only, $exclude_frag);
 
 	// Count number of sequences
 	$maxseq = substr_count($sequences, ">");
 
-	require_once "menu.php";
 
 	// If sequences were found
 	if ($maxseq > 0)
 	{
+		// Create analysis first to generate id
+		$id_analysis = save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $exclude_partial, $manual_only, $exclude_frag);
 		// Run alignment only if 2 or more sequences
 		if ($maxseq >= 2)
 		{
-			$alignment = run_alignment($sequences);
+			$alignment = run_alignment($sequences, $id_analysis);
 		}
 		else
 		{
@@ -91,34 +90,25 @@ if (isset($_POST['protein']) && isset($_POST['taxon']))
 		}
 
 		// Run motif scan
-		$motifs = run_motifs($sequences);
+		$motifs = run_motifs($sequences, $id_analysis);
 
-		if (search_exists($pdo, $protein, $taxon, $maxseq, $exclude_partial, $manual_only, $exclude_frag))
-		{
-			require_once "menu.php";
-
-			echo "<div class='container'>";
-			echo "<p class='info-text'>";
-			echo "This search already exists.";
-			echo "<br>";
-			echo "Visit Previous Searches to view results or run a new search.";
-			echo "</p>";
-			echo "</div>";
-
-			exit;
-		}
 		// Save analysis results to database
-		$id_analysis = save_analysis($pdo, $protein, $taxon, $maxseq, $sequences, $alignment, $motifs, $exclude_partial, $manual_only, $exclude_frag);
+		$stmt = $pdo->prepare("Insert into alignments (id_analysis, alignment_data) values (?, ?)");
+		$stmt->execute([$id_analysis, $alignment]);
+
+		$stmt = $pdo->prepare("Insert into motifs (id_analysis, motif_data) values (?, ?)");
+		$stmt->execute([$id_analysis, $motifs]);
 
 		// Store analysis id
 		$_SESSION['id_analysis'] = $id_analysis;
 		$_SESSION['generated_analyses'] = [];
 	}
+
 	else
 	{
 		// No sequences found message
 		echo "<p class='info-text'>";
-		echo "No sequences found! Try again :(";
+		echo "No sequences were found for this query. Please check the spelling or try a different query :(";
 		echo "</p>";
 
 		exit;

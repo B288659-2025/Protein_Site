@@ -39,10 +39,29 @@ echo "<form method='POST' action='download.php'>";
 // Use the card class for visualisation
 echo "<div class='card'>";
 
+// Get the current session id so we can show only datasets from this session
+$session_id = session_id();
 
-// Get all datasets from the database to show in the dropdown list
-$stmt = $pdo->query("SELECT id_analysis, name, protein, taxon, seq_max, created_at, exclude_partial, manual_only FROM analyses ORDER BY created_at DESC");
 
+// Get the current session id so we can filter datasets correctly
+$session_id = session_id();
+
+
+// If the user is logged in, show their datasets plus the example dataset
+if (isset($_SESSION['id_user']))
+{
+	$stmt = $pdo->prepare("Select id_analysis, name, protein, taxon, seq_max, created_at, exclude_partial, manual_only from analyses where id_user = ? 
+	or name = 'Example Dataset' order by created_at desc");
+	$stmt->execute([$_SESSION['id_user']]);
+}
+else
+{
+	// If the user is a guest, show datasets from this session plus the example dataset
+
+	$stmt = $pdo->prepare("Select id_analysis, name, protein, taxon, seq_max, created_at, exclude_partial, manual_only from analyses where session_id = ? 
+	or name = 'Example Dataset' order by created_at desc");
+	$stmt->execute([$session_id]);
+}
 echo "<div class='form-row'>";
 
 echo "<label for='analysis_id'><strong>Dataset to export:</strong></label>";
@@ -62,7 +81,16 @@ while ($row = $stmt->fetch())
 
 	// Format the date nicely - get the date using strtotime
 	// Source: https://www.php.net/manual/en/function.strtotime.php
-	$date = date("d M Y H:i", strtotime($row['created_at']));
+	// Do not display the creation date for the example dataset,because it reflects the first time the dataset was generated,not when the current user selected it.
+	// The example dataset is created once and then reused for all users.
+	if ($name === "Example Dataset")
+	{
+		$date = "System data";
+	}
+	else
+	{
+		$date = date("d M Y H:i", strtotime($row['created_at']));
+	}
 
 	// Store selected filters in a list
 	$filters = [];

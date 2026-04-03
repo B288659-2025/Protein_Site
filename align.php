@@ -46,6 +46,7 @@ if (!$alignment || trim($alignment) == "")
 {
 	// If yes, clarify that at least 2 sequences are needed for an alignment
 	echo "<p class='info-text'>";
+	error_log("Alignment is empty");
 	echo "Alignment requires at least 2 sequences.";
 	echo "</p>";
 	echo "</div>";
