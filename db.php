@@ -2,9 +2,9 @@
 
 // Set the PDO connection to the database - will be reset for submission
 $pdo = new PDO(
-    "mysql:host=127.0.0.1;dbname=DATABASE_NAME",
-    "USERNAME",
-    "PASSWORD"
+    "mysql:host=127.0.0.1;dbname=s2794196_website",
+    "s2794196",
+    'T15$o76!m98;'
 );
 
 // Turn off foreign key checks so old data can be deleted safely
